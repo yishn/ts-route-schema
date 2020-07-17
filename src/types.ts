@@ -7,8 +7,8 @@ export interface RouteOptions<
   Pt extends string = string,
   R = any,
   B = any,
-  Pm extends Params = any,
-  Q extends Query = any
+  Pm extends Params = Params,
+  Q extends Query = Query
 > {
   method: M,
   path: Pt,
@@ -16,6 +16,14 @@ export interface RouteOptions<
   requestBody?: Declare<B>,
   params?: Declare<Pm>,
   query?: Declare<Q>
+}
+
+export interface RouteHandler<F extends Function = any, O extends RouteOptions = RouteOptions> {
+  (
+    func: F,
+    req: RequestFromRouteOptions<O>,
+    res: ResponseFromRouteOptions<O>
+  ): Promise<ResBodyFromRouteOptions<O> | void>
 }
 
 export interface RouteFunction<T extends Route = Route> {

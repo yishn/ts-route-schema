@@ -1,5 +1,6 @@
 import type {Params, Query} from 'express-serve-static-core'
-import {RouteOptions, RouteFunction, RequestFromRouteOptions, ResponseFromRouteOptions} from './types'
+import type {IncomingHttpHeaders, OutgoingHttpHeaders} from 'http'
+import {RouteOptions, RouteFunction, RouteHandler} from './types'
 
 export const routeSym = Symbol('routeSym')
 
@@ -9,8 +10,8 @@ export class Route<
   Pt extends string = string,
   R = any,
   B = any,
-  Pm extends Params = any,
-  Q extends Query = any
+  Pm extends Params = Params,
+  Q extends Query = Query
 > {
   static wrap<
     F extends Function,
@@ -23,11 +24,7 @@ export class Route<
   >(
     func: F,
     options: RouteOptions<M, Pt, R, B, Pm, Q>,
-    handler: (
-      func: F,
-      req: RequestFromRouteOptions<typeof options>,
-      res: ResponseFromRouteOptions<typeof options>
-    ) => Promise<R | void>
+    handler: RouteHandler<F, RouteOptions<M, Pt, R, B, Pm, Q>>
   ): F & RouteFunction<Route<F, M, Pt, R, B, Pm, Q>> {
     let route = new Route(func, options, handler)
 
@@ -39,10 +36,6 @@ export class Route<
   private constructor(
     public readonly func: F,
     public readonly options: Readonly<RouteOptions<M, Pt, R, B, Pm, Q>>,
-    public readonly handler: (
-      func: F,
-      req: RequestFromRouteOptions<typeof options>,
-      res: ResponseFromRouteOptions<typeof options>
-    ) => Promise<R | void>
+    public readonly handler: RouteHandler<F, RouteOptions<M, Pt, R, B, Pm, Q>>
   ) {}
 }
