@@ -3,8 +3,8 @@ import type {Route, routeSym} from './Route'
 import type {Declare} from './util'
 
 export interface RouteOptions<
-  M extends string = any,
-  Pt extends string = any,
+  M extends string = string,
+  Pt extends string = string,
   R = any,
   B = any,
   Pm extends Params = any,

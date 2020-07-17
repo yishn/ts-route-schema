@@ -5,8 +5,8 @@ export const routeSym = Symbol('routeSym')
 
 export class Route<
   F extends Function = any,
-  M extends string = any,
-  Pt extends string = any,
+  M extends string = string,
+  Pt extends string = string,
   R = any,
   B = any,
   Pm extends Params = any,
