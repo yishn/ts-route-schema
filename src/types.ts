@@ -1,18 +1,14 @@
-import type * as ExpressTypes from 'express-serve-static-core'
+import type {Request, Response, Params, Query} from 'express-serve-static-core'
 import type {Route, routeSym} from './Route'
 import type {Declare} from './util'
 
-export interface IRouteFunction extends Function {
-  [routeSym]: Route<any, any, any, any, any, any, any>
-}
-
-export interface IRouteOptions<
-  M extends string,
-  Pt extends string,
-  R,
-  B,
-  Pm extends ExpressTypes.Params,
-  Q extends ExpressTypes.Query
+export interface RouteOptions<
+  M extends string = any,
+  Pt extends string = any,
+  R = any,
+  B = any,
+  Pm extends Params = any,
+  Q extends Query = any
 > {
   method: M,
   path: Pt,
@@ -21,3 +17,47 @@ export interface IRouteOptions<
   params?: Declare<Pm>,
   query?: Declare<Q>
 }
+
+export interface RouteFunction<T extends Route = Route> {
+  [routeSym]: T
+}
+
+export type MethodFromRouteOptions<O> =
+  O extends RouteOptions<infer M, any, any, any, any, any> ? M : never
+export type PathFromRouteOptions<O> =
+  O extends RouteOptions<any, infer Pt, any, any, any, any> ? Pt : never
+export type ResBodyFromRouteOptions<O> =
+  O extends RouteOptions<any, any, infer R, any, any, any> ? R : never
+export type ReqBodyFromRouteOptions<O> =
+  O extends RouteOptions<any, any, any, infer B, any, any> ? B : never
+export type ParamsFromRouteOptions<O> =
+  O extends RouteOptions<any, any, any, any, infer Pm, any> ? Pm : never
+export type QueryFromRouteOptions<O> =
+  O extends RouteOptions<any, any, any, any, any, infer Q> ? Q : never
+
+export type RequestFromRouteOptions<O> =
+  O extends RouteOptions<any, any, infer R, infer B, infer Pm, infer Q>
+  ? Request<Pm, R, B, Q>
+  : never
+export type ResponseFromRouteOptions<O> =
+  O extends RouteOptions<any, any, infer R, any, any, any>
+  ? Response<R>
+  : never
+
+export type RouteOptionsFromRouteFunction<F extends RouteFunction> =
+  F[typeof routeSym] extends Route<any, infer M, infer Pt, infer R, infer B, infer Pm, infer Q>
+  ? RouteOptions<M, Pt, R, B, Pm, Q>
+  : never
+
+export type MethodFromRouteFunction<F extends RouteFunction> =
+  MethodFromRouteOptions<RouteOptionsFromRouteFunction<F>>
+export type PathFromRouteFunction<F extends RouteFunction> =
+  PathFromRouteOptions<RouteOptionsFromRouteFunction<F>>
+export type ResBodyFromRouteFunction<F extends RouteFunction> =
+  ResBodyFromRouteOptions<RouteOptionsFromRouteFunction<F>>
+export type ReqBodyFromRouteFunction<F extends RouteFunction> =
+  ReqBodyFromRouteOptions<RouteOptionsFromRouteFunction<F>>
+export type ParamsFromRouteFunction<F extends RouteFunction> =
+  ParamsFromRouteOptions<RouteOptionsFromRouteFunction<F>>
+export type QueryFromRouteFunction<F extends RouteFunction> =
+  QueryFromRouteOptions<RouteOptionsFromRouteFunction<F>>
