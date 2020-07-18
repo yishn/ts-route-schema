@@ -5,7 +5,7 @@ import type {Declare} from './util'
 declare const phantom: unique symbol
 
 type DeepStringValues<T> = {
-  [K in keyof T]: T[K] extends object ? DeepStringValues<T[K]> : string
+  [K in keyof T]: T[K] extends object ? DeepStringValues<T[K]> : string & Declare<T[K]>
 }
 
 export type TypedValue = number | string | boolean
@@ -34,7 +34,7 @@ export interface RouteOptions<
   query?: Declare<Q>
 }
 
-export interface Formatted<F extends string> {
+export interface TypeFormat<F extends string> {
   [phantom]?: F
 }
 export interface ContentType<C extends string> {

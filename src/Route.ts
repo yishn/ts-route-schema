@@ -1,3 +1,4 @@
+import type {Router, IRouterMatcher} from 'express-serve-static-core'
 import {
   RouteOptions,
   RouteFunction,
@@ -52,5 +53,14 @@ export class Route<
         res.send(result)
       }
     }
+  }
+
+  register(router: Router) {
+    let method = this.options.method.toLowerCase() as keyof Router
+
+    ;(router[method] as IRouterMatcher<typeof router>)(
+      this.options.path,
+      this.getMiddleware()
+    )
   }
 }
