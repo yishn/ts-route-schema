@@ -1,16 +1,11 @@
-import type {RequestHandler, Params, Query} from 'express-serve-static-core'
-import {RouteOptions, RouteFunction, RouteHandler} from './types'
+import type {Params, Query} from 'express-serve-static-core'
+import {RouteOptions, RouteFunction, RouteHandler, RequestFromRouteOptions, ResponseFromRouteOptions} from './types'
 
 export const routeSym = Symbol('routeSym')
 
 export class Route<
   F extends Function = any,
-  M extends string = string,
-  Pt extends string = string,
-  Pm extends Params = Params,
-  R = any,
-  B = any,
-  Q extends Query = Query
+  O extends RouteOptions = RouteOptions
 > {
   static wrap<
     F extends Function,
@@ -24,7 +19,7 @@ export class Route<
     func: F,
     options: RouteOptions<M, Pt, Pm, R, B, Q>,
     handler: RouteHandler<F, RouteOptions<M, Pt, Pm, R, B, Q>>
-  ): F & RouteFunction<Route<F, M, Pt, Pm, R, B, Q>> {
+  ): F & RouteFunction<F, RouteOptions<M, Pt, Pm, R, B, Q>> {
     let route = new Route(func, options, handler)
 
     return Object.assign(func, {
@@ -34,13 +29,13 @@ export class Route<
 
   private constructor(
     public readonly func: F,
-    public readonly options: Readonly<RouteOptions<M, Pt, Pm, R, B, Q>>,
-    public readonly handler: RouteHandler<F, RouteOptions<M, Pt, Pm, R, B, Q>>
+    public readonly options: Readonly<O>,
+    public readonly handler: RouteHandler<F, O>
   ) {}
 
-  getMiddleware(): RequestHandler {
+  getMiddleware(): (req: RequestFromRouteOptions<O>, res: ResponseFromRouteOptions<O>) => void {
     return async (req, res) => {
-      let result = await this.handler(this.func, req as any, res)
+      let result = await this.handler(this.func, req, res)
 
       if (result !== undefined) {
         res.send(result)

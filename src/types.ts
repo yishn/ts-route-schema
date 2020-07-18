@@ -18,8 +18,8 @@ export interface RouteOptions<
   query?: Declare<Q>
 }
 
-export interface RouteFunction<T extends Route = Route> {
-  [routeSym]: T
+export interface RouteFunction<F extends Function = any, O extends RouteOptions = RouteOptions> {
+  [routeSym]: Route<F, O>
 }
 
 export type MethodFromRouteOptions<O> =
@@ -52,9 +52,7 @@ export interface RouteHandler<F extends Function = any, O extends RouteOptions =
 }
 
 export type RouteOptionsFromRouteFunction<F extends RouteFunction> =
-  F[typeof routeSym] extends Route<any, infer M, infer Pt, infer Pm, infer R, infer B, infer Q>
-  ? RouteOptions<M, Pt, Pm, R, B, Q>
-  : never
+  F[typeof routeSym] extends Route<any, infer O> ? O : never
 
 export type MethodFromRouteFunction<F extends RouteFunction> =
   MethodFromRouteOptions<RouteOptionsFromRouteFunction<F>>
