@@ -7,12 +7,9 @@ export function registerRoutes(router: Router, routes: RouteFunction[]) {
     let route = routeFunction[routeSym]
     let method = route.options.method.toLowerCase() as keyof Router
 
-    ;(router[method] as IRouterMatcher<typeof router>)(route.options.path, async (req, res) => {
-      let result = await route.handler(route.func, req, res)
-
-      if (result !== undefined) {
-        res.send(result)
-      }
-    })
+    ;(router[method] as IRouterMatcher<typeof router>)(
+      route.options.path,
+      route.getMiddleware()
+    )
   }
 }

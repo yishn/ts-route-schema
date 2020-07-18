@@ -1,7 +1,7 @@
-declare const declareSym: unique symbol
+declare const phantom: unique symbol
 
 export interface Declare<T> {
-  [declareSym]: T
+  [phantom]: T
 }
 
 export function declare<T>(): Declare<T> {
