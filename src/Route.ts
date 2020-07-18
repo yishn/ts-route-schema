@@ -1,5 +1,4 @@
 import type {Params, Query} from 'express-serve-static-core'
-import type {IncomingHttpHeaders, OutgoingHttpHeaders} from 'http'
 import {RouteOptions, RouteFunction, RouteHandler} from './types'
 
 export const routeSym = Symbol('routeSym')
