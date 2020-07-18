@@ -27,6 +27,10 @@ export class Route<
     })
   }
 
+  static fromFunction<F extends Function, O extends RouteOptions>(func: RouteFunction<F, O>): Route<F, O> {
+    return func[routeSym]
+  }
+
   private constructor(
     public readonly func: F,
     public readonly options: Readonly<O>,

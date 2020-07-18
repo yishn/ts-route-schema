@@ -23,26 +23,25 @@ export interface RouteFunction<F extends Function = any, O extends RouteOptions 
 }
 
 export type MethodFromRouteOptions<O> =
-  O extends RouteOptions<infer M, any, any, any, any, any> ? M : never
+  O extends RouteOptions<infer M> ? M : never
 export type PathFromRouteOptions<O> =
-  O extends RouteOptions<any, infer Pt, any, any, any, any> ? Pt : never
+  O extends RouteOptions<any, infer Pt> ? Pt : never
 export type ParamsFromRouteOptions<O> =
-  O extends RouteOptions<any, any, infer Pm, any, any, any> ? Pm : never
+  O extends RouteOptions<any, any, infer Pm> ? Pm : never
 export type ResBodyFromRouteOptions<O> =
-  O extends RouteOptions<any, any, any, infer R, any, any> ? R : never
+  O extends RouteOptions<any, any, any, infer R> ? R : never
 export type ReqBodyFromRouteOptions<O> =
-  O extends RouteOptions<any, any, any, any, infer B, any> ? B : never
+  O extends RouteOptions<any, any, any, any, infer B> ? B : never
 export type QueryFromRouteOptions<O> =
   O extends RouteOptions<any, any, any, any, any, infer Q> ? Q : never
 
-export type RequestFromRouteOptions<O> =
-  O extends RouteOptions<any, any, infer Pm, infer R, infer B, infer Q>
-  ? Request<Pm, R, B, Q>
-  : never
-export type ResponseFromRouteOptions<O> =
-  O extends RouteOptions<any, any, any, infer R, any, any>
-  ? Response<R>
-  : never
+export type RequestFromRouteOptions<O> = Request<
+  ParamsFromRouteOptions<O>,
+  ResBodyFromRouteOptions<O>,
+  ReqBodyFromRouteOptions<O>,
+  QueryFromRouteOptions<O>
+>
+export type ResponseFromRouteOptions<O> = Response<ResBodyFromRouteOptions<O>>
 export interface RouteHandler<F extends Function = any, O extends RouteOptions = RouteOptions> {
   (
     func: F,
