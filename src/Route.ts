@@ -1,5 +1,12 @@
-import type {Params, Query} from 'express-serve-static-core'
-import {RouteOptions, RouteFunction, RouteHandler, RequestFromRouteOptions, ResponseFromRouteOptions} from './types'
+import {
+  RouteOptions,
+  RouteFunction,
+  RouteHandler,
+  RequestFromRouteOptions,
+  ResponseFromRouteOptions,
+  TypedParams,
+  TypedQuery
+} from './types'
 
 export const routeSym = Symbol('routeSym')
 
@@ -11,10 +18,10 @@ export class Route<
     F extends Function,
     M extends string,
     Pt extends string,
-    Pm extends Params = {},
+    Pm extends TypedParams = {},
     R = undefined,
     B = undefined,
-    Q extends Query = {}
+    Q extends TypedQuery = {}
   >(
     func: F,
     options: RouteOptions<M, Pt, Pm, R, B, Q>,

@@ -1,14 +1,30 @@
-import type {Request, Response, Params, Query} from 'express-serve-static-core'
+import type {Request, Response} from 'express-serve-static-core'
 import type {Route, routeSym} from './Route'
 import type {Declare} from './util'
+
+declare const phantom: unique symbol
+
+type DeepStringValues<T> = {
+  [K in keyof T]: T[K] extends object ? DeepStringValues<T[K]> : string
+}
+
+export type TypedValue = number | string | boolean
+
+export interface TypedParams {
+  [key: string]: TypedValue
+}
+
+export interface TypedQuery {
+  [key: string]: TypedValue | TypedValue[] | TypedQuery | TypedQuery[]
+}
 
 export interface RouteOptions<
   M extends string = string,
   Pt extends string = string,
-  Pm extends Params = Params,
+  Pm extends TypedParams = TypedParams,
   R = any,
   B = any,
-  Q extends Query = Query
+  Q extends TypedQuery = TypedQuery
 > {
   method: M,
   path: Pt,
@@ -16,6 +32,16 @@ export interface RouteOptions<
   requestBody?: Declare<B>,
   params?: Declare<Pm>,
   query?: Declare<Q>
+}
+
+export interface Formatted<F extends string> {
+  [phantom]?: F
+}
+export interface ContentType<C extends string> {
+  [phantom]?: C
+}
+export interface StatusCode<S extends number> {
+  [phantom]?: S
 }
 
 export interface RouteFunction<F extends Function = any, O extends RouteOptions = RouteOptions> {
@@ -27,20 +53,21 @@ export type MethodFromRouteOptions<O> =
 export type PathFromRouteOptions<O> =
   O extends RouteOptions<any, infer Pt> ? Pt : never
 export type ParamsFromRouteOptions<O> =
-  O extends RouteOptions<any, any, infer Pm> ? Pm : never
+  O extends RouteOptions<any, any, infer Pm> ? DeepStringValues<Pm> : never
 export type ResBodyFromRouteOptions<O> =
   O extends RouteOptions<any, any, any, infer R> ? R : never
 export type ReqBodyFromRouteOptions<O> =
   O extends RouteOptions<any, any, any, any, infer B> ? B : never
 export type QueryFromRouteOptions<O> =
-  O extends RouteOptions<any, any, any, any, any, infer Q> ? Q : never
+  O extends RouteOptions<any, any, any, any, any, infer Q> ? DeepStringValues<Q> : never
 
-export type RequestFromRouteOptions<O> = Request<
-  ParamsFromRouteOptions<O>,
-  ResBodyFromRouteOptions<O>,
-  ReqBodyFromRouteOptions<O>,
-  QueryFromRouteOptions<O>
->
+export type RequestFromRouteOptions<O> =
+  Request<
+    ParamsFromRouteOptions<O>,
+    ResBodyFromRouteOptions<O>,
+    ReqBodyFromRouteOptions<O>,
+    QueryFromRouteOptions<O>
+  >
 export type ResponseFromRouteOptions<O> = Response<ResBodyFromRouteOptions<O>>
 export interface RouteHandler<F extends Function = any, O extends RouteOptions = RouteOptions> {
   (
