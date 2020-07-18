@@ -6,7 +6,8 @@ import {
   RequestFromRouteOptions,
   ResponseFromRouteOptions,
   TypedParams,
-  TypedQuery
+  TypedQuery,
+  StatusCode
 } from './types'
 
 export const routeSym = Symbol('routeSym')
@@ -20,7 +21,7 @@ export class Route<
     M extends string,
     Pt extends string,
     Pm extends TypedParams = {},
-    R = undefined,
+    R extends StatusCode<any> = undefined & StatusCode<200>,
     B = undefined,
     Q extends TypedQuery = {}
   >(

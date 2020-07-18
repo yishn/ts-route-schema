@@ -2,7 +2,9 @@ import type {Request, Response} from 'express-serve-static-core'
 import type {Route, routeSym} from './Route'
 import type {Declare} from './util'
 
-declare const phantom: unique symbol
+declare const typeFormatSym: unique symbol
+declare const contentTypeSym: unique symbol
+declare const statusCodeSym: unique symbol
 
 type DeepStringValues<T> = {
   [K in keyof T]: T[K] extends object ? DeepStringValues<T[K]> : string & Declare<T[K]>
@@ -22,7 +24,7 @@ export interface RouteOptions<
   M extends string = string,
   Pt extends string = string,
   Pm extends TypedParams = TypedParams,
-  R = any,
+  R extends StatusCode<any> = any,
   B = any,
   Q extends TypedQuery = TypedQuery
 > {
@@ -35,13 +37,14 @@ export interface RouteOptions<
 }
 
 export interface TypeFormat<F extends string> {
-  [phantom]?: F
+  [typeFormatSym]?: F
 }
 export interface ContentType<C extends string> {
-  [phantom]?: C
+  [contentTypeSym]?: C
 }
-export interface StatusCode<S extends number> {
-  [phantom]?: S
+type StatusCodeRange = 'default' | '1XX' | '2XX' | '3XX' | '4XX' | '5XX'
+export interface StatusCode<S extends number | StatusCodeRange> {
+  [statusCodeSym]?: S
 }
 
 export interface RouteFunction<F extends Function = any, O extends RouteOptions = RouteOptions> {
