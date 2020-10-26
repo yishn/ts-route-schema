@@ -3,20 +3,23 @@ import * as qs from 'qs'
 import {
   FetchRouteMethodImpl,
   FetchRouteMethodsImpl,
-  methods,
+  FetchRouteOptions,
   RouteSchema,
 } from './types'
 
 const { fetch, Headers } = fetchPonyfill()
 
 export function fetchRoute<S extends RouteSchema>(
-  schema: S
+  schema: S,
+  options: FetchRouteOptions = {}
 ): FetchRouteMethodsImpl<S> {
-  let result = {} as Record<typeof methods[number], FetchRouteMethodImpl>
+  let result = {} as Record<string, FetchRouteMethodImpl>
 
-  for (let method of methods) {
+  for (let method in schema.methods) {
+    if (schema.methods[method] == null) continue
+
     result[method] = async data => {
-      let renderedPath = schema.path
+      let renderedPath = (options.pathPrefix ?? '') + schema.path
 
       for (let [name, value] of Object.entries<string>(data.params ?? {})) {
         if (!/^\w+$/.test(name)) {

@@ -47,13 +47,13 @@ export type ResponseData<
   KnownOrDefault<T, 'headers', {}> &
   KnownOrDefault<T, 'body', void>
 
-export const methods = ['get', 'post', 'put', 'patch', 'delete'] as const
+export type Method = 'get' | 'post' | 'put' | 'patch' | 'delete'
 
-export type RouteSchemaMethods = {
-  [K in typeof methods[number]]?: (data: RequestData) => ResponseData
+export type RouteMethods = {
+  [K in Method]?: (data: RequestData) => ResponseData
 }
 
-export interface RouteSchema<M extends RouteSchemaMethods = any> {
+export interface RouteSchema<M extends RouteMethods = any> {
   path: string
   methods: M
 }
@@ -108,3 +108,7 @@ export type FetchRouteMethodsImpl<
         : undefined
     }
   : never
+
+export interface FetchRouteOptions {
+  pathPrefix?: string
+}
