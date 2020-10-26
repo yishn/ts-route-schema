@@ -1,5 +1,6 @@
 import type { Request, Response } from 'express'
 import type { ParsedQs } from 'qs'
+import type { RouteSchema } from './RouteSchema'
 
 declare const sym: unique symbol
 
@@ -33,7 +34,7 @@ export type RequestData<
 > = KnownOrDefault<T, 'headers', {}> &
   KnownOrDefault<T, 'params', {}> &
   KnownOrDefault<T, 'query', {}> &
-  KnownOrDefault<T, 'body', void>
+  KnownOrDefault<T, 'body', undefined>
 
 interface GenericResponseData {
   status: number
@@ -45,17 +46,12 @@ export type ResponseData<
   T extends Partial<GenericResponseData> = any
 > = KnownOrDefault<T, 'status', 200> &
   KnownOrDefault<T, 'headers', {}> &
-  KnownOrDefault<T, 'body', void>
+  KnownOrDefault<T, 'body', undefined>
 
 export type Method = 'get' | 'post' | 'put' | 'patch' | 'delete'
 
 export type RouteMethods = {
-  [K in Method]?: (data: RequestData) => ResponseData
-}
-
-export interface RouteSchema<M extends RouteMethods = any> {
-  path: string
-  methods: M
+  [K in Method]?: (data: Required<RequestData>) => ResponseData
 }
 
 export type RouteMethodImpl<
@@ -82,15 +78,27 @@ export type RouteMethodsImpl<S extends RouteSchema> = S extends RouteSchema<
     }
   : never
 
+type FetchRouteMethodImplParam<T> = [
+  T & {
+    req?: globalThis.RequestInit
+  }
+]
+
 export type FetchRouteMethodImpl<
   T extends RequestData = RequestData,
   U extends ResponseData = ResponseData
 > = (
-  data: T & {
-    req?: globalThis.RequestInit
-  }
+  ...data: {} extends T
+    ? Partial<FetchRouteMethodImplParam<T>>
+    : FetchRouteMethodImplParam<T>
 ) => Promise<
-  Required<U | ResponseData<{ status: 500 }>> & {
+  Required<
+    | U
+    | ResponseData<{
+        status: 500
+        body: undefined
+      }>
+  > & {
     res: globalThis.Response
   }
 >

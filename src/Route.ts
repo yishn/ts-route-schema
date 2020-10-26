@@ -1,5 +1,6 @@
-import { RequestHandler } from 'express'
-import { RouteSchema, RouteMethodsImpl, RouteMethodImpl } from './types'
+import type { RequestHandler } from 'express'
+import type { RouteSchema } from './RouteSchema'
+import type { RouteMethodsImpl, RouteMethodImpl } from './types'
 
 export function Route<S extends RouteSchema>(
   schema: S,

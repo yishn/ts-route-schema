@@ -1,10 +1,10 @@
 import * as fetchPonyfill from 'fetch-ponyfill'
 import * as qs from 'qs'
-import {
+import type { RouteSchema } from './RouteSchema'
+import type {
   FetchRouteMethodImpl,
   FetchRouteMethodsImpl,
   FetchRouteOptions,
-  RouteSchema,
 } from './types'
 
 const { fetch, Headers } = fetchPonyfill()
@@ -18,7 +18,7 @@ export function fetchRoute<S extends RouteSchema>(
   for (let method in schema.methods) {
     if (schema.methods[method] == null) continue
 
-    result[method] = async data => {
+    result[method] = async (data = {}) => {
       let renderedPath = (options.pathPrefix ?? '') + schema.path
 
       for (let [name, value] of Object.entries<string>(data.params ?? {})) {
@@ -49,10 +49,7 @@ export function fetchRoute<S extends RouteSchema>(
         ...data.req,
       })
 
-      let body =
-        rawResponse.headers.get('content-type') === 'application/json'
-          ? await rawResponse.json().catch(_ => undefined)
-          : undefined
+      let body = await rawResponse.json().catch(_ => undefined)
 
       return {
         res: rawResponse,
