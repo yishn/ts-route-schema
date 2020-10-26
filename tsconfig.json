@@ -2,10 +2,11 @@
   "compilerOptions": {
     "outDir": "./dist",
     "rootDir": "./src",
-    "target": "ES2018",
+    "target": "ES2019",
     "module": "CommonJS",
     "strict": true,
+    "sourceMap": true,
     "declaration": true,
-    "sourceMap": true
+    "declarationMap": true
   }
 }

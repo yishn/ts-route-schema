@@ -1,97 +1,70 @@
-import type {Request, Response} from 'express-serve-static-core'
-import type {Route, routeSym} from './Route'
-import type {Declare} from './util'
+import type { Request, Response } from 'express'
+import type { ParsedQs } from 'qs'
 
-declare const typeFormatSym: unique symbol
-declare const contentTypeSym: unique symbol
-declare const statusCodeSym: unique symbol
+declare const sym: unique symbol
 
-type DeepStringValues<T> = {
-  [K in keyof T]: T[K] extends object ? DeepStringValues<T[K]> : string & Declare<T[K]>
+export type IsAny<T> = boolean extends (T extends typeof sym ? true : false)
+  ? true
+  : false
+
+export type IsUnknown<T> = IsAny<T> extends false
+  ? unknown extends T
+    ? true
+    : false
+  : false
+
+export type KnownOrDefault<T, D> = IsUnknown<T> extends true ? D : T
+
+interface GenericRequestData {
+  headers: Record<string, string | string[] | undefined>
+  params: Record<string, string>
+  query: ParsedQs
+  body: any
 }
 
-export type TypedValue = number | string | boolean
-
-export interface TypedParams {
-  [key: string]: TypedValue
+export interface RequestData<T extends Partial<GenericRequestData> = any> {
+  headers: KnownOrDefault<T['headers'], {}>
+  params: KnownOrDefault<T['params'], {}>
+  query: KnownOrDefault<T['query'], {}>
+  body: KnownOrDefault<T['body'], void>
 }
 
-export interface TypedQuery {
-  [key: string]: TypedValue | TypedValue[] | TypedQuery | TypedQuery[]
+interface GenericResponseData {
+  status: number
+  headers: Record<string, string | string[] | undefined>
+  body: any
 }
 
-export interface RouteOptions<
-  M extends string = string,
-  Pt extends string = string,
-  Pm extends TypedParams = TypedParams,
-  R extends StatusCode<any> = any,
-  B = any,
-  Q extends TypedQuery = TypedQuery
-> {
-  method: M,
-  path: Pt,
-  responseBody?: Declare<R>,
-  requestBody?: Declare<B>,
-  params?: Declare<Pm>,
-  query?: Declare<Q>
+export interface ResponseData<T extends Partial<GenericResponseData> = any> {
+  status: KnownOrDefault<T['status'], number>
+  headers: KnownOrDefault<T['headers'], {}>
+  body: KnownOrDefault<T['body'], void>
 }
 
-export interface TypeFormat<F extends string> {
-  [typeFormatSym]?: F
-}
-export interface ContentType<C extends string> {
-  [contentTypeSym]?: C
-}
-type StatusCodeRange = 'default' | '1XX' | '2XX' | '3XX' | '4XX' | '5XX'
-export interface StatusCode<S extends number | StatusCodeRange> {
-  [statusCodeSym]?: S
+export const methods = ['get', 'post', 'put', 'patch', 'delete'] as const
+
+export type RouteSchemaMethods = {
+  [K in typeof methods[number]]?: (data: RequestData) => ResponseData
 }
 
-export interface RouteFunction<F extends Function = any, O extends RouteOptions = RouteOptions> {
-  [routeSym]: Route<F, O>
+export interface RouteSchema<M extends RouteSchemaMethods = any> {
+  path: string
+  methods: M
 }
 
-export type MethodFromRouteOptions<O> =
-  O extends RouteOptions<infer M> ? M : never
-export type PathFromRouteOptions<O> =
-  O extends RouteOptions<any, infer Pt> ? Pt : never
-export type ParamsFromRouteOptions<O> =
-  O extends RouteOptions<any, any, infer Pm> ? DeepStringValues<Pm> : never
-export type ResBodyFromRouteOptions<O> =
-  O extends RouteOptions<any, any, any, infer R> ? R : never
-export type ReqBodyFromRouteOptions<O> =
-  O extends RouteOptions<any, any, any, any, infer B> ? B : never
-export type QueryFromRouteOptions<O> =
-  O extends RouteOptions<any, any, any, any, any, infer Q> ? DeepStringValues<Q> : never
-
-export type RequestFromRouteOptions<O> =
-  Request<
-    ParamsFromRouteOptions<O>,
-    ResBodyFromRouteOptions<O>,
-    ReqBodyFromRouteOptions<O>,
-    QueryFromRouteOptions<O>
-  >
-export type ResponseFromRouteOptions<O> = Response<ResBodyFromRouteOptions<O>>
-export interface RouteHandler<F extends Function = any, O extends RouteOptions = RouteOptions> {
-  (
-    func: F,
-    req: RequestFromRouteOptions<O>,
-    res: ResponseFromRouteOptions<O>
-  ): Promise<ResBodyFromRouteOptions<O> | void>
-}
-
-export type RouteOptionsFromRouteFunction<F extends RouteFunction> =
-  F[typeof routeSym] extends Route<any, infer O> ? O : never
-
-export type MethodFromRouteFunction<F extends RouteFunction> =
-  MethodFromRouteOptions<RouteOptionsFromRouteFunction<F>>
-export type PathFromRouteFunction<F extends RouteFunction> =
-  PathFromRouteOptions<RouteOptionsFromRouteFunction<F>>
-export type ResBodyFromRouteFunction<F extends RouteFunction> =
-  ResBodyFromRouteOptions<RouteOptionsFromRouteFunction<F>>
-export type ReqBodyFromRouteFunction<F extends RouteFunction> =
-  ReqBodyFromRouteOptions<RouteOptionsFromRouteFunction<F>>
-export type ParamsFromRouteFunction<F extends RouteFunction> =
-  ParamsFromRouteOptions<RouteOptionsFromRouteFunction<F>>
-export type QueryFromRouteFunction<F extends RouteFunction> =
-  QueryFromRouteOptions<RouteOptionsFromRouteFunction<F>>
+export type RouteMethodsImpl<S extends RouteSchema> = S extends RouteSchema<
+  infer M
+>
+  ? {
+      [K in keyof M]: M[K] extends (
+        data: RequestData<infer T>
+      ) => ResponseData<infer U>
+        ? (
+            data: RequestData<T> & {
+              req: Request
+              res: Response
+            }
+          ) => Promise<Partial<ResponseData<U>>>
+        : undefined
+    }
+  : never
