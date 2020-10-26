@@ -3,6 +3,8 @@ import { ParamsQueryRouteSchema, TestRouteSchema } from './routeSchemas'
 
 export const TestRoute = Route(TestRouteSchema, {
   async get(data) {
+    await new Promise(resolve => setTimeout(resolve, 1000))
+
     return {
       body: {
         message: 'Hello World!',
