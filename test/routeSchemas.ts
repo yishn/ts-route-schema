@@ -30,4 +30,40 @@ export const TestRouteSchema = RouteSchema('/test', {
       }>
     >()
   },
+
+  patch(data: RequestData<{}>) {
+    return as<ResponseData<{}>>()
+  },
+})
+
+export const ParamsQueryRouteSchema = RouteSchema('/params/:name/query', {
+  get(
+    data: RequestData<{
+      params: { name: string }
+      query: { q: string }
+    }>
+  ) {
+    return as<
+      ResponseData<{
+        body: {
+          name: string
+          q: string
+        }
+      }>
+    >()
+  },
+
+  delete(
+    data: RequestData<{
+      params: { name: string }
+    }>
+  ) {
+    return as<
+      ResponseData<{
+        body: {
+          name: string
+        }
+      }>
+    >()
+  },
 })

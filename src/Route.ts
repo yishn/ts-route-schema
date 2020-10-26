@@ -25,9 +25,8 @@ export function Route<S extends RouteSchema>(
           body: req.body,
         })
 
-        for (let [name, value] of Object.entries<string | string[]>(
-          responseData.headers ?? {}
-        )) {
+        for (let name in responseData.headers ?? {}) {
+          let value = responseData.headers?.[name] as string | string[]
           res.header(name, value)
         }
 
