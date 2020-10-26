@@ -8,8 +8,8 @@ const app = express()
 const pathPrefix = 'http://localhost:3000'
 
 app.use(express.json())
-app.use(...TestRoute)
-app.use(...ParamsQueryRoute)
+app.all(...TestRoute)
+app.all(...ParamsQueryRoute)
 
 t.test('fetchRoute', async t => {
   t.beforeEach(async (_, t) => {

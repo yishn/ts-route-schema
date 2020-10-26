@@ -1,3 +1,3 @@
 export function as<T>(): T {
-  return undefined as never
+  return 1 as never
 }

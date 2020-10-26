@@ -51,7 +51,7 @@ export type ResponseData<
 export type Method = 'get' | 'post' | 'put' | 'patch' | 'delete'
 
 export type RouteMethods = {
-  [K in Method]?: (data: Required<RequestData>) => ResponseData
+  [K in Method]?: [RequestData, ResponseData]
 }
 
 export type RouteMethodImpl<
@@ -68,7 +68,7 @@ export type RouteMethodsImpl<S extends RouteSchema> = S extends RouteSchema<
   infer M
 >
   ? {
-      [K in keyof M]: M[K] extends (data: infer T) => infer U
+      [K in keyof M]: M[K] extends [infer T, infer U]
         ? T extends RequestData
           ? U extends ResponseData
             ? RouteMethodImpl<T, U>
@@ -107,7 +107,7 @@ export type FetchRouteMethodsImpl<
   S extends RouteSchema
 > = S extends RouteSchema<infer M>
   ? {
-      [K in keyof M]: M[K] extends (data: infer T) => infer U
+      [K in keyof M]: M[K] extends [infer T, infer U]
         ? T extends RequestData
           ? U extends ResponseData
             ? FetchRouteMethodImpl<T, U>

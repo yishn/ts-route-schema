@@ -50,18 +50,23 @@ export function fetchRoute<S extends RouteSchema>(
     })
 
     let body = await rawResponse.json().catch(_ => undefined)
+    let headers: Record<string, string> | undefined
 
     return {
       res: rawResponse,
       status: rawResponse.status,
       get headers() {
-        return [...rawResponse.headers.entries()].reduce(
-          (acc, [name, value]) => {
-            acc[name] = value
-            return acc
-          },
-          {} as Record<string, string>
-        )
+        if (headers == null) {
+          headers = [...rawResponse.headers.entries()].reduce(
+            (acc, [name, value]) => {
+              acc[name] = value
+              return acc
+            },
+            {} as Record<string, string>
+          )
+        }
+
+        return headers
       },
       body,
     }
