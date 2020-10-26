@@ -8,19 +8,19 @@ export type IsAny<T> = (T extends typeof sym ? true : false) extends false
   ? false
   : true
 
-export type IsUnknown<T> = IsAny<T> extends false
-  ? unknown extends T
-    ? true
-    : false
+export type IsUnknown<T> = IsAny<T> extends true
+  ? false
+  : unknown extends T
+  ? true
   : false
 
 export type KnownOrDefault<T, K extends keyof T, D> = IsUnknown<
   T[K]
 > extends true
-  ? Partial<Record<K, D>>
+  ? { [_ in K]?: D }
   : IsAny<T[K]> extends true
-  ? Partial<Record<K, any>>
-  : Record<K, T[K]>
+  ? { [_ in K]?: any }
+  : { [_ in K]: T[K] }
 
 interface GenericRequestData {
   headers: Record<string, string | string[] | undefined>
