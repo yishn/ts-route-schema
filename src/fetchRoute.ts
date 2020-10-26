@@ -7,7 +7,7 @@ import type {
   FetchRouteOptions,
 } from './types'
 
-const { fetch, Headers } = fetchPonyfill()
+const { fetch } = fetchPonyfill()
 
 export function fetchRoute<S extends RouteSchema>(
   schema: S,
@@ -38,10 +38,10 @@ export function fetchRoute<S extends RouteSchema>(
 
     let rawResponse = await fetch(renderedPath, {
       method: method.toUpperCase(),
-      headers: new Headers({
+      headers: {
         'content-type': 'application/json',
         ...data.headers,
-      }),
+      },
       body:
         data.req?.body == null && data.body != null
           ? JSON.stringify(data.body)
