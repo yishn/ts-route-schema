@@ -4,51 +4,56 @@ import type { RouteSchema } from './RouteSchema'
 
 declare const sym: unique symbol
 
-export type IsAny<T> = (T extends typeof sym ? true : false) extends false
+type IsAny<T> = (T extends typeof sym ? true : false) extends false
   ? false
   : true
 
-export type IsUnknown<T> = IsAny<T> extends true
+type IsUnknown<T> = IsAny<T> extends true
   ? false
   : unknown extends T
   ? true
   : false
 
-export type KnownOrDefault<T, K extends keyof T, D> = IsUnknown<
-  T[K]
-> extends true
+type KnownOrDefault<T, K extends keyof T, D> = IsUnknown<T[K]> extends true
   ? { [_ in K]?: D }
   : IsAny<T[K]> extends true
   ? { [_ in K]?: any }
   : { [_ in K]: T[K] }
 
-interface GenericRequestData {
-  headers: Record<string, string | string[] | undefined>
-  params: Record<string, string | undefined>
-  query: ParsedQs
-  body: any
+interface RequestDataBuilder {
+  headers?: Record<string, string | string[] | undefined>
+  params?: Record<string, string | undefined>
+  query?: ParsedQs
+  body?: any
 }
 
 export type RequestData<
-  T extends Partial<GenericRequestData> = any
-> = KnownOrDefault<T, 'headers', {}> &
+  T extends RequestDataBuilder = any
+> = {} & KnownOrDefault<T, 'headers', {}> &
   KnownOrDefault<T, 'params', {}> &
   KnownOrDefault<T, 'query', {}> &
   KnownOrDefault<T, 'body', undefined>
 
-interface GenericResponseData {
-  status: number
-  headers: Record<string, string | string[] | undefined>
-  body: any
+interface ResponseDataBuilder {
+  status?: number
+  headers?: Record<string, string | string[] | undefined>
+  body?: any
 }
 
 export type ResponseData<
-  T extends Partial<GenericResponseData> = any
-> = KnownOrDefault<T, 'status', 200> &
+  T extends ResponseDataBuilder = any
+> = {} & KnownOrDefault<T, 'status', 200> &
   KnownOrDefault<T, 'headers', {}> &
   KnownOrDefault<T, 'body', undefined>
 
-export type Method = 'get' | 'post' | 'put' | 'patch' | 'delete'
+export type Method =
+  | 'get'
+  | 'post'
+  | 'put'
+  | 'delete'
+  | 'patch'
+  | 'options'
+  | 'head'
 
 export type RouteMethods = {
   [K in Method]?: [RequestData, ResponseData]
@@ -68,12 +73,8 @@ export type RouteMethodsImpl<S extends RouteSchema> = S extends RouteSchema<
   infer M
 >
   ? {
-      [K in keyof M]: M[K] extends [infer T, infer U]
-        ? T extends RequestData
-          ? U extends ResponseData
-            ? RouteMethodImpl<T, U>
-            : undefined
-          : undefined
+      [K in keyof M]: M[K] extends [RequestData, ResponseData]
+        ? RouteMethodImpl<M[K][0], M[K][1]>
         : undefined
     }
   : never
@@ -107,12 +108,8 @@ export type FetchRouteMethodsImpl<
   S extends RouteSchema
 > = S extends RouteSchema<infer M>
   ? {
-      [K in keyof M]: M[K] extends [infer T, infer U]
-        ? T extends RequestData
-          ? U extends ResponseData
-            ? FetchRouteMethodImpl<T, U>
-            : undefined
-          : undefined
+      [K in keyof M]: M[K] extends [RequestData, ResponseData]
+        ? FetchRouteMethodImpl<M[K][0], M[K][1]>
         : undefined
     }
   : never

@@ -15,9 +15,13 @@
   "keywords": [
     "express",
     "server",
+    "browser",
+    "isomorphic",
     "routes",
+    "fetch",
     "typescript",
     "ts",
+    "types",
     "api",
     "documentation",
     "docs"
