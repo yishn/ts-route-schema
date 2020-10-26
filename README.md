@@ -1,3 +1,3 @@
-# typed-express-router
+# ts-express-route-schema
 
-WIP: Automatic API generation with typed Express routes.
+WIP: Strictly typed Express routes.
