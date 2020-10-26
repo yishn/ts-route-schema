@@ -1,5 +1,5 @@
-import type { RequestHandler } from 'express'
-import { RouteSchema, RouteMethodsImpl } from './types'
+import { Request, RequestHandler, Response } from 'express'
+import { RouteSchema, RouteMethodsImpl, RouteMethodImpl } from './types'
 
 export function Route<S extends RouteSchema>(
   schema: S,
@@ -8,8 +8,10 @@ export function Route<S extends RouteSchema>(
   return [
     schema.path,
     async (req, res, next) => {
-      let implementation =
-        implementations[req.method.toLowerCase() as keyof RouteMethodsImpl<S>]
+      let implementation = implementations[
+        req.method.toLowerCase() as keyof RouteMethodsImpl<S>
+      ] as RouteMethodImpl | undefined
+
       if (implementation == null) return next()
 
       try {
@@ -22,7 +24,9 @@ export function Route<S extends RouteSchema>(
           body: req.body,
         })
 
-        for (let [name, value] of Object.entries(responseData.headers ?? {})) {
+        for (let [name, value] of Object.entries<string | string[]>(
+          responseData.headers ?? {}
+        )) {
           res.header(name, value)
         }
 
