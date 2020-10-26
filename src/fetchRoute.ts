@@ -22,13 +22,13 @@ export function fetchRoute<S extends RouteSchema>(
     let renderedPath = (options.pathPrefix ?? '') + schema.path
 
     for (let name in data.params ?? {}) {
-      let value = data.params?.[name] as string
+      let value = (data.params?.[name] as string) ?? ''
 
       if (!/^\w+$/.test(name)) {
         throw new Error('Param values may only contain alphanumeric characters')
       }
 
-      let regex = new RegExp(`:${name}`, 'g')
+      let regex = new RegExp(`:${name}\\??`, 'g')
       renderedPath = renderedPath.replace(regex, encodeURIComponent(value))
     }
 

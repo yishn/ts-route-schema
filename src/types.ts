@@ -24,7 +24,7 @@ export type KnownOrDefault<T, K extends keyof T, D> = IsUnknown<
 
 interface GenericRequestData {
   headers: Record<string, string | string[] | undefined>
-  params: Record<string, string>
+  params: Record<string, string | undefined>
   query: ParsedQs
   body: any
 }
