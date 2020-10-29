@@ -1,17 +1,53 @@
 import type { RequestHandler } from 'express'
 import type { RouteSchema } from './RouteSchema'
-import type { MethodsImpl, MethodImpl, Method } from './types'
+import type { MethodImpls, MethodImpl, Method } from './types'
 
 /**
  * @internal
  */
 declare const sym: unique symbol
 
-export type Route<S> = [string, RequestHandler & { [sym]?: S }]
+export type Route<S> = [
+  path: string,
+  handler: RequestHandler & {
+    /**
+     * @internal
+     */
+    [sym]?: S
+  }
+]
 
+/**
+ * Defines a route that implements all methods that is defined in the route
+ * schema.
+ *
+ * ### Example
+ *
+ * ```ts
+ * const TestRoute = Route(TestRouteSchema, {
+ *  async get(data) {
+ *    // Do stuff
+ *
+ *    return {
+ *      body: {
+ *        message: `Testing, ${data.query.name}`
+ *      }
+ *    }
+ *  }
+ * })
+ * ```
+ *
+ * You can mount the route directly on an Express router with:
+ *
+ * ```ts
+ * const router = express.Router()
+ *
+ * router.all(...TestRoute)
+ * ```
+ */
 export function Route<S extends RouteSchema>(
   schema: S,
-  implementations: MethodsImpl<S>
+  implementations: S extends RouteSchema<infer M> ? MethodImpls<M> : never
 ): Route<S> {
   return [
     schema.path,

@@ -1,17 +1,22 @@
 import type { Request, Response } from 'express'
 import type { ParsedQs } from 'qs'
 import type { MethodSchema } from './MethodSchema'
-import type { RouteSchema } from './RouteSchema'
 
 /**
  * @internal
  */
 declare const sym: unique symbol
 
+/**
+ * Resolves to `true` if and only if `T` is `any`, `false` otherwise
+ */
 type IsAny<T> = (T extends typeof sym ? true : false) extends false
   ? false
   : true
 
+/**
+ * Resolves to `true` if and only if `T` is `unknown`, `false` otherwise
+ */
 type IsUnknown<T> = IsAny<T> extends true
   ? false
   : unknown extends T
@@ -59,62 +64,58 @@ export type Method =
   | 'options'
   | 'head'
 
-export type MethodSchemas = {
-  [K in Method]?: MethodSchema<RequestData, ResponseData>
-}
+export type MethodSchemas = Partial<
+  Record<Method, MethodSchema<RequestData, ResponseData>>
+>
 
-export type MethodImpl<
+export interface MethodImpl<
   T extends RequestData = RequestData,
   U extends ResponseData = ResponseData
-> = (
-  data: Required<T> & {
-    req: Request
-    res: Response
-  }
-) => Promise<U>
-
-export type MethodsImpl<S extends RouteSchema> = S extends RouteSchema<infer M>
-  ? {
-      [K in keyof M]: M[K] extends MethodSchema<infer T, infer U>
-        ? MethodImpl<T, U>
-        : undefined
+> {
+  (
+    data: Required<T> & {
+      req: Request
+      res: Response
     }
-  : never
+  ): Promise<U>
+}
 
-type FetchMethodImplParam<T> = [
-  T & {
+export type MethodImpls<M extends MethodSchemas> = {
+  [K in keyof M]: M[K] extends MethodSchema<infer T, infer U>
+    ? MethodImpl<T, U>
+    : undefined
+}
+
+type MethodFetchArgs<T extends RequestData> = [
+  data: T & {
     req?: globalThis.RequestInit
   }
 ]
 
-export type FetchMethodImpl<
+export interface MethodFetch<
   T extends RequestData = RequestData,
   U extends ResponseData = ResponseData
-> = (
-  ...data: {} extends T
-    ? Partial<FetchMethodImplParam<T>>
-    : FetchMethodImplParam<T>
-) => Promise<
-  Required<
-    | U
-    | ResponseData<{
-        status: 500
-        body: undefined
-      }>
-  > & {
-    res: globalThis.Response
-  }
->
-
-export type FetchMethodsImpl<S extends RouteSchema> = S extends RouteSchema<
-  infer M
->
-  ? {
-      [K in keyof M]: M[K] extends MethodSchema<infer T, infer U>
-        ? FetchMethodImpl<T, U>
-        : undefined
+> {
+  (
+    ...args: {} extends T ? Partial<MethodFetchArgs<T>> : MethodFetchArgs<T>
+  ): Promise<
+    Required<
+      | U
+      | ResponseData<{
+          status: 500
+          body: undefined
+        }>
+    > & {
+      res: globalThis.Response
     }
-  : never
+  >
+}
+
+export type MethodFetchs<M extends MethodSchemas> = {
+  [K in keyof M]: M[K] extends MethodSchema<infer T, infer U>
+    ? MethodFetch<T, U>
+    : undefined
+}
 
 export interface FetchRouteOptions {
   pathPrefix?: string

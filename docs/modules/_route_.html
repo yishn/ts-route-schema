@@ -90,10 +90,10 @@
 				<section class="tsd-panel tsd-member tsd-kind-type-alias tsd-parent-kind-module tsd-has-type-parameter tsd-is-external">
 					<a name="route" class="tsd-anchor"></a>
 					<h3>Route</h3>
-					<div class="tsd-signature tsd-kind-icon">Route&lt;S&gt;<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol">[</span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">RequestHandler</span><span class="tsd-signature-symbol"> &amp; </span><span class="tsd-signature-symbol">{ </span>[sym]<span class="tsd-signature-symbol">?: </span><a href="" class="tsd-signature-type">S</a><span class="tsd-signature-symbol"> }</span><span class="tsd-signature-symbol">]</span></div>
+					<div class="tsd-signature tsd-kind-icon">Route&lt;S&gt;<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol">[</span>path<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">, </span>handler<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">RequestHandler</span><span class="tsd-signature-symbol"> &amp; </span><span class="tsd-signature-symbol">{}</span><span class="tsd-signature-symbol">]</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/yishn/typed-express-router/blob/831b8cb/src/Route.ts#L10">Route.ts:10</a></li>
+							<li>Defined in <a href="https://github.com/yishn/typed-express-router/blob/972a33c/src/Route.ts#L10">Route.ts:10</a></li>
 						</ul>
 					</aside>
 					<h4 class="tsd-type-parameters-title">Type parameters</h4>
@@ -110,15 +110,39 @@
 					<a name="route-1" class="tsd-anchor"></a>
 					<h3>Route</h3>
 					<ul class="tsd-signatures tsd-kind-function tsd-parent-kind-module tsd-has-type-parameter tsd-is-external">
-						<li class="tsd-signature tsd-kind-icon">Route&lt;S&gt;<span class="tsd-signature-symbol">(</span>schema<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">S</span>, implementations<span class="tsd-signature-symbol">: </span><a href="_types_.html#methodsimpl" class="tsd-signature-type">MethodsImpl</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">S</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="" class="tsd-signature-type">Route</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">S</span><span class="tsd-signature-symbol">&gt;</span></li>
+						<li class="tsd-signature tsd-kind-icon">Route&lt;S&gt;<span class="tsd-signature-symbol">(</span>schema<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">S</span>, implementations<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">S</span><span class="tsd-signature-symbol"> extends </span><span class="tsd-signature-type">RouteSchema</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-symbol">infer </span> M<span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol"> ? </span><span class="tsd-signature-type">MethodImpls</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">M</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol"> : </span><span class="tsd-signature-type">never</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="" class="tsd-signature-type">Route</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">S</span><span class="tsd-signature-symbol">&gt;</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/yishn/typed-express-router/blob/831b8cb/src/Route.ts#L12">Route.ts:12</a></li>
+									<li>Defined in <a href="https://github.com/yishn/typed-express-router/blob/972a33c/src/Route.ts#L48">Route.ts:48</a></li>
 								</ul>
 							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Defines a route that implements all methods that is defined in the route
+									schema.</p>
+								</div>
+								<a href="#example" id="example" style="color: inherit; text-decoration: none;">
+									<h3>Example</h3>
+								</a>
+								<pre><code class="language-ts"><span class="hljs-keyword">const</span> TestRoute = Route(TestRouteSchema, {
+ <span class="hljs-keyword">async</span> <span class="hljs-function"><span class="hljs-title">get</span>(<span class="hljs-params">data</span>)</span> {
+   <span class="hljs-comment">// Do stuff</span>
+
+   <span class="hljs-keyword">return</span> {
+     <span class="hljs-attr">body</span>: {
+       <span class="hljs-attr">message</span>: <span class="hljs-string">`Testing, <span class="hljs-subst">${data.query.name}</span>`</span>
+     }
+   }
+ }
+})</code></pre>
+								<p>You can mount the route directly on an Express router with:</p>
+								<pre><code class="language-ts"><span class="hljs-keyword">const</span> router = express.Router()
+
+router.all(...TestRoute)</code></pre>
+							</div>
 							<h4 class="tsd-type-parameters-title">Type parameters</h4>
 							<ul class="tsd-type-parameters">
 								<li>
@@ -131,7 +155,7 @@
 									<h5>schema: <span class="tsd-signature-type">S</span></h5>
 								</li>
 								<li>
-									<h5>implementations: <a href="_types_.html#methodsimpl" class="tsd-signature-type">MethodsImpl</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">S</span><span class="tsd-signature-symbol">&gt;</span></h5>
+									<h5>implementations: <span class="tsd-signature-type">S</span><span class="tsd-signature-symbol"> extends </span><span class="tsd-signature-type">RouteSchema</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-symbol">infer </span> M<span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol"> ? </span><span class="tsd-signature-type">MethodImpls</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">M</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol"> : </span><span class="tsd-signature-type">never</span></h5>
 								</li>
 							</ul>
 							<h4 class="tsd-returns-title">Returns <a href="" class="tsd-signature-type">Route</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">S</span><span class="tsd-signature-symbol">&gt;</span></h4>
