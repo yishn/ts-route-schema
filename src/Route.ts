@@ -62,16 +62,11 @@ export function Route<S extends RouteSchema>(
         let responseData = await implementation({
           req,
           res,
-          headers: req.headers,
+          contentType: req.header("content-type"),
           params: req.params,
           query: req.query,
           body: req.body,
         })
-
-        for (let name in responseData.headers ?? {}) {
-          let value = responseData.headers?.[name] as string | string[]
-          res.header(name, value)
-        }
 
         res.status(responseData.status ?? 200).send(responseData.body)
       } catch (err) {

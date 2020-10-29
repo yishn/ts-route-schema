@@ -3,7 +3,7 @@ import * as qs from 'qs'
 import type { RouteSchema } from './RouteSchema'
 import type { MethodFetch, MethodFetchs, FetchRouteOptions } from './types'
 
-const { fetch } = fetchPonyfill()
+const { fetch, Headers } = fetchPonyfill()
 
 export function fetchRoute<S extends RouteSchema>(
   schema: S,
@@ -32,38 +32,40 @@ export function fetchRoute<S extends RouteSchema>(
       renderedPath += '?' + qs.stringify(data.query)
     }
 
+    let requestContentType = data.contentType ?? 'application/json'
+    let headers = new Headers(data.req?.headers)
+    headers.set('content-type', requestContentType)
+
     let rawResponse = await fetch(renderedPath, {
       method: method.toUpperCase(),
-      headers: {
-        'content-type': 'application/json',
-        ...data.headers,
-      },
       body:
-        data.req?.body == null && data.body != null
+        data.req?.body != null || data.body == null
+          ? null
+          : requestContentType === 'application/json'
           ? JSON.stringify(data.body)
+          : requestContentType === 'application/x-www-form-urlencoded'
+          ? qs.stringify(data.body)
+          : requestContentType === 'text/plain'
+          ? data.body.toString()
           : null,
       ...data.req,
+      headers,
     })
 
-    let body = await rawResponse.json().catch(_ => undefined)
-    let headers: Record<string, string> | undefined
+    let responseContentType = rawResponse.headers.get('content-type')
+    let body =
+      responseContentType === 'application/json'
+        ? await rawResponse.json()
+        : responseContentType === 'application/x-www-form-urlencoded'
+        ? qs.parse(await rawResponse.text())
+        : responseContentType === 'text/plain'
+        ? await rawResponse.text()
+        : undefined
 
     return {
       res: rawResponse,
+      contentType: responseContentType,
       status: rawResponse.status,
-      get headers() {
-        if (headers == null) {
-          headers = [...rawResponse.headers.entries()].reduce(
-            (acc, [name, value]) => {
-              acc[name] = value
-              return acc
-            },
-            {} as Record<string, string>
-          )
-        }
-
-        return headers
-      },
       body,
     }
   }

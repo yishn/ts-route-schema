@@ -68,7 +68,6 @@ t.test('fetchRoute', async t => {
     })
 
     t.strictEqual(response.status, 200)
-    t.strictEqual(typeof response.headers, 'object')
     t.strictEqual(response.body?.name, '沈易川')
     t.strictEqual(response.body?.q, 'stuck in traffic')
   })

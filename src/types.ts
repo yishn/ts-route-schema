@@ -30,7 +30,7 @@ type KnownOrDefault<T, K extends keyof T, D> = IsUnknown<T[K]> extends true
   : { [_ in K]: T[K] }
 
 interface RequestDataTemplate {
-  headers?: Record<string, string | string[] | undefined>
+  contentType?: string
   params?: Record<string, string | undefined>
   query?: ParsedQs
   body?: any
@@ -38,21 +38,21 @@ interface RequestDataTemplate {
 
 export type RequestData<
   T extends RequestDataTemplate = any
-> = {} & KnownOrDefault<T, 'headers', {}> &
+> = {} & KnownOrDefault<T, 'contentType', 'application/json'> &
   KnownOrDefault<T, 'params', {}> &
   KnownOrDefault<T, 'query', {}> &
   KnownOrDefault<T, 'body', undefined>
 
 interface ResponseDataTemplate {
+  contentType?: string
   status?: number
-  headers?: Record<string, string | string[] | undefined>
   body?: any
 }
 
 export type ResponseData<
   T extends ResponseDataTemplate = any
-> = {} & KnownOrDefault<T, 'status', 200> &
-  KnownOrDefault<T, 'headers', {}> &
+> = {} & KnownOrDefault<T, 'contentType', 'application/json'> &
+  KnownOrDefault<T, 'status', 200> &
   KnownOrDefault<T, 'body', undefined>
 
 export type Method =
