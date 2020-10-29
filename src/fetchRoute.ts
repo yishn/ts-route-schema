@@ -2,8 +2,8 @@ import * as fetchPonyfill from 'fetch-ponyfill'
 import * as qs from 'qs'
 import type { RouteSchema } from './RouteSchema'
 import type {
-  FetchRouteMethodImpl,
-  FetchRouteMethodsImpl,
+  FetchMethodImpl,
+  FetchMethodsImpl,
   FetchRouteOptions,
 } from './types'
 
@@ -12,12 +12,12 @@ const { fetch } = fetchPonyfill()
 export function fetchRoute<S extends RouteSchema>(
   schema: S,
   options: FetchRouteOptions = {}
-): FetchRouteMethodsImpl<S> {
-  let result = {} as Record<string, FetchRouteMethodImpl>
+): FetchMethodsImpl<S> {
+  let result = {} as Record<string, FetchMethodImpl>
 
   async function request(
     method: string,
-    data: Parameters<FetchRouteMethodImpl>[0] = {}
+    data: Parameters<FetchMethodImpl>[0] = {}
   ) {
     let renderedPath = (options.pathPrefix ?? '') + schema.path
 

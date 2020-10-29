@@ -1,21 +1,24 @@
 import type { RequestHandler } from 'express'
 import type { RouteSchema } from './RouteSchema'
-import type { RouteMethodsImpl, RouteMethodImpl } from './types'
+import type { MethodsImpl, MethodImpl, Method } from './types'
 
+/**
+ * @internal
+ */
 declare const sym: unique symbol
 
 export type Route<S> = [string, RequestHandler & { [sym]?: S }]
 
 export function Route<S extends RouteSchema>(
   schema: S,
-  implementations: RouteMethodsImpl<S>
+  implementations: MethodsImpl<S>
 ): Route<S> {
   return [
     schema.path,
     async (req, res, next) => {
       let implementation = implementations[
-        req.method.toLowerCase() as keyof RouteMethodsImpl<S>
-      ] as RouteMethodImpl | undefined
+        req.method.toLowerCase() as Method
+      ] as MethodImpl | undefined
 
       if (implementation == null) return next()
 

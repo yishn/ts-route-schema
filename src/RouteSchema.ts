@@ -1,11 +1,11 @@
-import type { RouteMethods } from './types'
+import type { MethodSchemas } from './types'
 
-export interface RouteSchema<M extends RouteMethods = any> {
+export interface RouteSchema<M extends MethodSchemas = any> {
   path: string
   methods: M
 }
 
-export function RouteSchema<M extends RouteMethods>(
+export function RouteSchema<M extends MethodSchemas>(
   path: string,
   methods: M
 ): RouteSchema<M> {

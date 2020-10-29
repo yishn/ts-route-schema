@@ -1,7 +1,11 @@
 import type { Request, Response } from 'express'
 import type { ParsedQs } from 'qs'
+import type { MethodSchema } from './MethodSchema'
 import type { RouteSchema } from './RouteSchema'
 
+/**
+ * @internal
+ */
 declare const sym: unique symbol
 
 type IsAny<T> = (T extends typeof sym ? true : false) extends false
@@ -20,7 +24,7 @@ type KnownOrDefault<T, K extends keyof T, D> = IsUnknown<T[K]> extends true
   ? { [_ in K]?: any }
   : { [_ in K]: T[K] }
 
-interface RequestDataBuilder {
+interface RequestDataTemplate {
   headers?: Record<string, string | string[] | undefined>
   params?: Record<string, string | undefined>
   query?: ParsedQs
@@ -28,20 +32,20 @@ interface RequestDataBuilder {
 }
 
 export type RequestData<
-  T extends RequestDataBuilder = any
+  T extends RequestDataTemplate = any
 > = {} & KnownOrDefault<T, 'headers', {}> &
   KnownOrDefault<T, 'params', {}> &
   KnownOrDefault<T, 'query', {}> &
   KnownOrDefault<T, 'body', undefined>
 
-interface ResponseDataBuilder {
+interface ResponseDataTemplate {
   status?: number
   headers?: Record<string, string | string[] | undefined>
   body?: any
 }
 
 export type ResponseData<
-  T extends ResponseDataBuilder = any
+  T extends ResponseDataTemplate = any
 > = {} & KnownOrDefault<T, 'status', 200> &
   KnownOrDefault<T, 'headers', {}> &
   KnownOrDefault<T, 'body', undefined>
@@ -55,11 +59,11 @@ export type Method =
   | 'options'
   | 'head'
 
-export type RouteMethods = {
-  [K in Method]?: [RequestData, ResponseData]
+export type MethodSchemas = {
+  [K in Method]?: MethodSchema<RequestData, ResponseData>
 }
 
-export type RouteMethodImpl<
+export type MethodImpl<
   T extends RequestData = RequestData,
   U extends ResponseData = ResponseData
 > = (
@@ -69,29 +73,27 @@ export type RouteMethodImpl<
   }
 ) => Promise<U>
 
-export type RouteMethodsImpl<S extends RouteSchema> = S extends RouteSchema<
-  infer M
->
+export type MethodsImpl<S extends RouteSchema> = S extends RouteSchema<infer M>
   ? {
-      [K in keyof M]: M[K] extends [RequestData, ResponseData]
-        ? RouteMethodImpl<M[K][0], M[K][1]>
+      [K in keyof M]: M[K] extends MethodSchema<infer T, infer U>
+        ? MethodImpl<T, U>
         : undefined
     }
   : never
 
-type FetchRouteMethodImplParam<T> = [
+type FetchMethodImplParam<T> = [
   T & {
     req?: globalThis.RequestInit
   }
 ]
 
-export type FetchRouteMethodImpl<
+export type FetchMethodImpl<
   T extends RequestData = RequestData,
   U extends ResponseData = ResponseData
 > = (
   ...data: {} extends T
-    ? Partial<FetchRouteMethodImplParam<T>>
-    : FetchRouteMethodImplParam<T>
+    ? Partial<FetchMethodImplParam<T>>
+    : FetchMethodImplParam<T>
 ) => Promise<
   Required<
     | U
@@ -104,12 +106,12 @@ export type FetchRouteMethodImpl<
   }
 >
 
-export type FetchRouteMethodsImpl<
-  S extends RouteSchema
-> = S extends RouteSchema<infer M>
+export type FetchMethodsImpl<S extends RouteSchema> = S extends RouteSchema<
+  infer M
+>
   ? {
-      [K in keyof M]: M[K] extends [RequestData, ResponseData]
-        ? FetchRouteMethodImpl<M[K][0], M[K][1]>
+      [K in keyof M]: M[K] extends MethodSchema<infer T, infer U>
+        ? FetchMethodImpl<T, U>
         : undefined
     }
   : never

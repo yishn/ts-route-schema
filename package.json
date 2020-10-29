@@ -1,12 +1,13 @@
 {
-  "name": "typed-express-router",
+  "name": "ts-express-route-schema",
   "version": "1.0.0",
   "description": "Automatic API generation with typed Express routes.",
   "main": "./dist/main.js",
   "scripts": {
     "test": "tap --test-regex=test\\/.*\\.test\\.ts$ --reporter=base",
     "format": "prettier --write .",
-    "build": "prettier --check . && tsc --project ./tsconfig.build.json"
+    "build": "prettier --check . && tsc --project ./tsconfig.build.json",
+    "docs": "typedoc --out ./docs --excludePrivate --stripInternal ./src/main.ts"
   },
   "repository": {
     "type": "git",
@@ -52,6 +53,7 @@
     "prettier": "^2.1.2",
     "tap": "^14.10.8",
     "ts-expect": "^1.1.0",
+    "typedoc": "^0.19.2",
     "typescript": "^3.9.7"
   }
 }
