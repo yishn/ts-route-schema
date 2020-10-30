@@ -20,14 +20,14 @@ export interface RouteSchema<M extends MethodSchemas = any> {
  *
  * ```ts
  * const TestRouteSchema = RouteSchema('/test', {
- *  get: MethodSchema<
- *    RequestData<{
- *      query: { name: string }
- *    }>,
- *    ResponseData<{
- *      body: { message: string }
- *    }>
- *  >()
+ *   get: MethodSchema<
+ *     RequestData<{
+ *       query: { name: string }
+ *     }>,
+ *     ResponseData<{
+ *       body: { message: string }
+ *     }>
+ *   >()
  * })
  * ```
  *

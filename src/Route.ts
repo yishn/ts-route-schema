@@ -25,15 +25,15 @@ export type Route<S> = [
  *
  * ```ts
  * const TestRoute = Route(TestRouteSchema, {
- *  async get(data) {
- *    // Do stuff
+ *   async get(data) {
+ *     // Do stuff
  *
- *    return {
- *      body: {
- *        message: `Testing, ${data.query.name}`
- *      }
- *    }
- *  }
+ *     return {
+ *       body: {
+ *         message: `Testing, ${data.query.name}`
+ *       }
+ *     }
+ *   }
  * })
  * ```
  *
