@@ -1,7 +1,7 @@
 {
   "compilerOptions": {
     "rootDir": ".",
-    "target": "ES2016",
+    "target": "ES2018",
     "module": "CommonJS",
     "strict": true,
     "strictNullChecks": true,

@@ -145,7 +145,7 @@ export interface MethodImpl<
   (
     data: Required<T> & {
       /**
-       * Contains the request object as received by the server library.
+       * Contains the request object as given by the server library.
        */
       req: Tr
       /**
