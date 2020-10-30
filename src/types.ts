@@ -202,7 +202,7 @@ export interface MethodFetch<
   >
 }
 
-export interface FetchRouteOptions {
+export interface RouteFetcherOptions {
   /**
    * Will be prefixed to the path when creating the URL for the HTTP request.
    *

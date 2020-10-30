@@ -3,7 +3,7 @@ import * as qs from 'qs'
 import { compile as compilePath } from 'path-to-regexp'
 import type { RouteSchema } from './RouteSchema'
 import type { MethodSchema } from './MethodSchema'
-import type { MethodSchemas, MethodFetch, FetchRouteOptions } from './types'
+import type { MethodSchemas, MethodFetch, RouteFetcherOptions } from './types'
 
 const { fetch, Headers } = fetchPonyfill()
 
@@ -43,7 +43,7 @@ export type RouteFetcher<M extends MethodSchemas> = {
  */
 export function RouteFetcher<M extends MethodSchemas>(
   schema: RouteSchema<M>,
-  options: FetchRouteOptions = {}
+  options: RouteFetcherOptions = {}
 ): RouteFetcher<M> {
   let result = {} as Record<keyof M, MethodFetch>
 
