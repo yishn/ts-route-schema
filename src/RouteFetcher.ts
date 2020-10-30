@@ -27,7 +27,7 @@ export type RouteFetcher<M extends MethodSchemas> = {
  *
  * ```ts
  * let TestRoute = await RouteFetcher(TestRouteSchema)
- * let response = TestRoute.get({
+ * let response = await TestRoute.get({
  *   query: {
  *     name: 'Simon'
  *   }
