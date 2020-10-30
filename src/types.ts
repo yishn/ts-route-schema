@@ -78,9 +78,12 @@ export interface MethodImpl<
 }
 
 export type MethodImpls<M extends MethodSchemas> = {
-  [K in keyof M]: M[K] extends MethodSchema<infer T, infer U>
+  [K in keyof M & keyof MethodSchemas]: M[K] extends MethodSchema<
+    infer T,
+    infer U
+  >
     ? MethodImpl<T, U>
-    : undefined
+    : never
 }
 
 type MethodFetchArgs<T extends RequestData> = [
@@ -109,9 +112,12 @@ export interface MethodFetch<
 }
 
 export type MethodFetchs<M extends MethodSchemas> = {
-  [K in keyof M]: M[K] extends MethodSchema<infer T, infer U>
+  [K in keyof M & keyof MethodSchemas]: M[K] extends MethodSchema<
+    infer T,
+    infer U
+  >
     ? MethodFetch<T, U>
-    : undefined
+    : never
 }
 
 export interface FetchRouteOptions {
