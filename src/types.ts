@@ -1,7 +1,3 @@
-import type {
-  Request as ExpressRequest,
-  Response as ExpressResponse,
-} from 'express'
 import type { ParsedQs } from 'qs'
 import type { MethodSchema } from './MethodSchema'
 
@@ -142,28 +138,30 @@ export interface MethodSchemas {
 
 export interface MethodImpl<
   T extends RequestData = RequestData,
-  U extends ResponseData = ResponseData
+  U extends ResponseData = ResponseData,
+  Tr = any,
+  Ur = any
 > {
   (
     data: Required<T> & {
       /**
-       * Contains the request object as received by Express.
+       * Contains the request object as received by the server library.
        */
-      req: ExpressRequest<T['params'], U['body'], T['body'], T['query']>
+      req: Tr
       /**
-       * Contains the response object as given by Express.
+       * Contains the response object as given by the server library.
        */
-      res: ExpressResponse<U['body']>
+      res: Ur
     }
   ): Promise<U>
 }
 
-export type MethodImpls<M extends MethodSchemas> = {
+export type MethodImpls<M extends MethodSchemas, Tr, Ur> = {
   [K in keyof M & keyof MethodSchemas]: M[K] extends MethodSchema<
     infer T,
     infer U
   >
-    ? MethodImpl<T, U>
+    ? MethodImpl<T, U, Tr, Ur>
     : never
 }
 

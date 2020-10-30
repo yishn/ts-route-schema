@@ -44,7 +44,7 @@ export function RouteFetcher<M extends MethodSchemas>(
   schema: RouteSchema<M>,
   options: FetchRouteOptions = {}
 ): RouteFetcher<M> {
-  let result = {} as Record<string, MethodFetch>
+  let result = {} as Record<keyof M, MethodFetch>
 
   async function request(
     method: string,
@@ -116,5 +116,5 @@ export function RouteFetcher<M extends MethodSchemas>(
     }
   }
 
-  return result as any
+  return result as RouteFetcher<M>
 }

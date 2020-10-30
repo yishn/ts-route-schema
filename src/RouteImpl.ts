@@ -1,6 +1,10 @@
-import type { Router } from 'express'
+import type {
+  Router as ExpressRouter,
+  Request as ExpressRequest,
+  Response as ExpressResponse,
+} from 'express'
 import type { RouteSchema } from './RouteSchema'
-import type { MethodImpls, MethodImpl, MethodSchemas } from './types'
+import type { MethodImpls, MethodSchemas } from './types'
 
 /**
  * @internal
@@ -8,9 +12,9 @@ import type { MethodImpls, MethodImpl, MethodSchemas } from './types'
 declare const phantom: unique symbol
 
 /**
- * Use `Route(schema, implementations)` to create a `Route` instance.
+ * Use one of the `RouteImpl` functions to create a `RouteImpl` instance.
  */
-export interface RouteImpl<M extends MethodSchemas> {
+export interface RouteImpl<M extends MethodSchemas, R> {
   /**
    * @internal
    */
@@ -20,21 +24,21 @@ export interface RouteImpl<M extends MethodSchemas> {
    */
   path: string
   /**
-   * Mounts the route to the given Express router.
+   * Mounts the route onto the server library.
    *
    * @param router
    */
-  mountToExpress(router: Router): void
+  mountOnto(router: R): void
 }
 
 /**
  * Creates a `RouteImpl` instance that contains implementations of all methods
- * of a route schema.
+ * of a route schema that can be mounted onto an Express router.
  *
  * #### Example
  *
  * ```ts
- * const TestRoute = RouteImpl(TestRouteSchema, {
+ * const TestRoute = ExpressRouteImpl(TestRouteSchema, {
  *   async get(data) {
  *     // Do stuff
  *
@@ -47,31 +51,29 @@ export interface RouteImpl<M extends MethodSchemas> {
  * })
  * ```
  *
- * You can mount the route directly on an Express router with:
+ * You can mount the route directly onto an Express router with:
  *
  * ```ts
  * const router = express.Router()
  *
- * TestRoute.mountToExpress(router)
+ * TestRoute.mountOnto(router)
  * ```
  *
  * @param schema - The route schema to implement.
  * @param implementations - The implementations of the methods defined in the
  * given route schema.
  */
-export function RouteImpl<M extends MethodSchemas>(
+export function ExpressRouteImpl<M extends MethodSchemas>(
   schema: RouteSchema<M>,
-  implementations: MethodImpls<M>
-): RouteImpl<M> {
+  implementations: MethodImpls<M, ExpressRequest, ExpressResponse>
+): RouteImpl<M, ExpressRouter> {
   return {
     path: schema.path,
 
-    mountToExpress(router) {
+    mountOnto(router) {
       router.all(this.path, async (req, res, next) => {
-        let implementation = implementations[
-          req.method.toLowerCase() as keyof MethodSchemas
-        ] as MethodImpl | undefined
-
+        let implementation =
+          implementations[req.method.toLowerCase() as keyof MethodSchemas]
         if (implementation == null) return next()
 
         try {

@@ -1,7 +1,7 @@
-import { RouteImpl } from '../src/main'
+import { ExpressRouteImpl } from '../src/main'
 import { ParamsQueryRouteSchema, TestRouteSchema } from './routeSchemas'
 
-export const TestRoute = RouteImpl(TestRouteSchema, {
+export const TestRoute = ExpressRouteImpl(TestRouteSchema, {
   async get(data) {
     await new Promise(resolve => setTimeout(resolve, 1000))
 
@@ -27,7 +27,7 @@ export const TestRoute = RouteImpl(TestRouteSchema, {
   },
 })
 
-export const ParamsQueryRoute = RouteImpl(ParamsQueryRouteSchema, {
+export const ParamsQueryRoute = ExpressRouteImpl(ParamsQueryRouteSchema, {
   async get(data) {
     return {
       body: {

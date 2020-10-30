@@ -79,7 +79,7 @@
 						<section class="tsd-index-section tsd-is-external">
 							<h3>Functions</h3>
 							<ul class="tsd-index-list">
-								<li class="tsd-kind-function tsd-parent-kind-module tsd-has-type-parameter tsd-is-external"><a href="_routeimpl_.html#routeimpl-1" class="tsd-kind-icon">Route<wbr>Impl</a></li>
+								<li class="tsd-kind-function tsd-parent-kind-module tsd-has-type-parameter tsd-is-external"><a href="_routeimpl_.html#expressrouteimpl" class="tsd-kind-icon">Express<wbr>Route<wbr>Impl</a></li>
 							</ul>
 						</section>
 					</div>
@@ -88,27 +88,27 @@
 			<section class="tsd-panel-group tsd-member-group tsd-is-external">
 				<h2>Functions</h2>
 				<section class="tsd-panel tsd-member tsd-kind-function tsd-parent-kind-module tsd-has-type-parameter tsd-is-external">
-					<a name="routeimpl-1" class="tsd-anchor"></a>
-					<h3>Route<wbr>Impl</h3>
+					<a name="expressrouteimpl" class="tsd-anchor"></a>
+					<h3>Express<wbr>Route<wbr>Impl</h3>
 					<ul class="tsd-signatures tsd-kind-function tsd-parent-kind-module tsd-has-type-parameter tsd-is-external">
-						<li class="tsd-signature tsd-kind-icon">Route<wbr>Impl&lt;M&gt;<span class="tsd-signature-symbol">(</span>schema<span class="tsd-signature-symbol">: </span><a href="../interfaces/_routeschema_.routeschema.html" class="tsd-signature-type">RouteSchema</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">M</span><span class="tsd-signature-symbol">&gt;</span>, implementations<span class="tsd-signature-symbol">: </span><a href="_types_.html#methodimpls" class="tsd-signature-type">MethodImpls</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">M</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="../interfaces/_routeimpl_.routeimpl.html" class="tsd-signature-type">RouteImpl</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">M</span><span class="tsd-signature-symbol">&gt;</span></li>
+						<li class="tsd-signature tsd-kind-icon">Express<wbr>Route<wbr>Impl&lt;M&gt;<span class="tsd-signature-symbol">(</span>schema<span class="tsd-signature-symbol">: </span><a href="../interfaces/_routeschema_.routeschema.html" class="tsd-signature-type">RouteSchema</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">M</span><span class="tsd-signature-symbol">&gt;</span>, implementations<span class="tsd-signature-symbol">: </span><a href="_types_.html#methodimpls" class="tsd-signature-type">MethodImpls</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">M</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">ExpressRequest</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">ExpressResponse</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="../interfaces/_routeimpl_.routeimpl.html" class="tsd-signature-type">RouteImpl</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">M</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">ExpressRouter</span><span class="tsd-signature-symbol">&gt;</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in src/RouteImpl.ts:62</li>
+									<li>Defined in <a href="https://github.com/yishn/typed-express-router/blob/746a338/src/RouteImpl.ts#L66">src/RouteImpl.ts:66</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
 								<div class="lead">
 									<p>Creates a <code>RouteImpl</code> instance that contains implementations of all methods
-									of a route schema.</p>
+									of a route schema that can be mounted onto an Express router.</p>
 								</div>
 								<a href="#example" id="example" style="color: inherit; text-decoration: none;">
 									<h4>Example</h4>
 								</a>
-								<pre><code class="language-ts"><span class="hljs-keyword">const</span> TestRoute = RouteImpl(TestRouteSchema, {
+								<pre><code class="language-ts"><span class="hljs-keyword">const</span> TestRoute = ExpressRouteImpl(TestRouteSchema, {
   <span class="hljs-keyword">async</span> <span class="hljs-function"><span class="hljs-title">get</span>(<span class="hljs-params">data</span>)</span> {
     <span class="hljs-comment">// Do stuff</span>
 
@@ -119,10 +119,10 @@
     }
   }
 })</code></pre>
-								<p>You can mount the route directly on an Express router with:</p>
+								<p>You can mount the route directly onto an Express router with:</p>
 								<pre><code class="language-ts"><span class="hljs-keyword">const</span> router = express.Router()
 
-TestRoute.mountToExpress(router)</code></pre>
+TestRoute.mountOnto(router)</code></pre>
 							</div>
 							<h4 class="tsd-type-parameters-title">Type parameters</h4>
 							<ul class="tsd-type-parameters">
@@ -139,14 +139,14 @@ TestRoute.mountToExpress(router)</code></pre>
 									</div>
 								</li>
 								<li>
-									<h5>implementations: <a href="_types_.html#methodimpls" class="tsd-signature-type">MethodImpls</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">M</span><span class="tsd-signature-symbol">&gt;</span></h5>
+									<h5>implementations: <a href="_types_.html#methodimpls" class="tsd-signature-type">MethodImpls</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">M</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">ExpressRequest</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">ExpressResponse</span><span class="tsd-signature-symbol">&gt;</span></h5>
 									<div class="tsd-comment tsd-typography">
 										<p>The implementations of the methods defined in the
 										given route schema.</p>
 									</div>
 								</li>
 							</ul>
-							<h4 class="tsd-returns-title">Returns <a href="../interfaces/_routeimpl_.routeimpl.html" class="tsd-signature-type">RouteImpl</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">M</span><span class="tsd-signature-symbol">&gt;</span></h4>
+							<h4 class="tsd-returns-title">Returns <a href="../interfaces/_routeimpl_.routeimpl.html" class="tsd-signature-type">RouteImpl</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">M</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">ExpressRouter</span><span class="tsd-signature-symbol">&gt;</span></h4>
 						</li>
 					</ul>
 				</section>
@@ -190,7 +190,7 @@ TestRoute.mountToExpress(router)</code></pre>
 						<a href="../interfaces/_routeimpl_.routeimpl.html" class="tsd-kind-icon">Route<wbr>Impl</a>
 					</li>
 					<li class=" tsd-kind-function tsd-parent-kind-module tsd-has-type-parameter tsd-is-external">
-						<a href="_routeimpl_.html#routeimpl-1" class="tsd-kind-icon">Route<wbr>Impl</a>
+						<a href="_routeimpl_.html#expressrouteimpl" class="tsd-kind-icon">Express<wbr>Route<wbr>Impl</a>
 					</li>
 				</ul>
 			</nav>

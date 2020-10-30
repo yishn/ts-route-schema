@@ -1,7 +1,7 @@
 import * as t from 'tap'
 import * as express from 'express'
 import * as getPort from 'get-port'
-import { ParamsQueryRoute, TestRoute } from './routes'
+import { ParamsQueryRoute, TestRoute } from './routeImpls'
 import { RouteFetcher } from '../src/main'
 import { ParamsQueryRouteSchema, TestRouteSchema } from './routeSchemas'
 
@@ -12,8 +12,8 @@ t.test('RouteFetcher', async t => {
 
     app.use(express.json())
 
-    TestRoute.mountToExpress(app)
-    ParamsQueryRoute.mountToExpress(app)
+    TestRoute.mountOnto(app)
+    ParamsQueryRoute.mountOnto(app)
 
     t.context.pathPrefix = `http://localhost:${port}`
 
