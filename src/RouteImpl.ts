@@ -24,16 +24,16 @@ export interface RouteImpl<M extends MethodSchemas, R> {
    */
   path: string
   /**
-   * Mounts the route onto the server library.
+   * Mounts the route on the server library.
    *
    * @param router
    */
-  mountOnto(router: R): void
+  mountOn(router: R): void
 }
 
 /**
  * Creates a `RouteImpl` instance that contains implementations of all methods
- * of a route schema that can be mounted onto an Express router.
+ * of a route schema that can be mounted on an Express router.
  *
  * #### Example
  *
@@ -56,7 +56,7 @@ export interface RouteImpl<M extends MethodSchemas, R> {
  * ```ts
  * const router = express.Router()
  *
- * TestRoute.mountOnto(router)
+ * TestRoute.mountOn(router)
  * ```
  *
  * @param schema - The route schema to implement.
@@ -70,7 +70,7 @@ export function ExpressRouteImpl<M extends MethodSchemas>(
   return {
     path: schema.path,
 
-    mountOnto(router) {
+    mountOn(router) {
       router.all(this.path, async (req, res, next) => {
         let implementation =
           implementations[req.method.toLowerCase() as keyof MethodSchemas]

@@ -12,8 +12,8 @@ t.test('RouteFetcher', async t => {
 
     app.use(express.json())
 
-    TestRoute.mountOnto(app)
-    ParamsQueryRoute.mountOnto(app)
+    TestRoute.mountOn(app)
+    ParamsQueryRoute.mountOn(app)
 
     t.context.pathPrefix = `http://localhost:${port}`
 
