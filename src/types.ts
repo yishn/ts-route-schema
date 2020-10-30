@@ -204,15 +204,6 @@ export interface MethodFetch<
   >
 }
 
-export type MethodFetchs<M extends MethodSchemas> = {
-  [K in keyof M & keyof MethodSchemas]: M[K] extends MethodSchema<
-    infer T,
-    infer U
-  >
-    ? MethodFetch<T, U>
-    : never
-}
-
 export interface FetchRouteOptions {
   /**
    * Will be prefixed to the path when creating the URL for the HTTP request.

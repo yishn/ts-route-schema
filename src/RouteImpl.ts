@@ -8,9 +8,9 @@ import type { MethodImpls, MethodImpl, MethodSchemas } from './types'
 declare const phantom: unique symbol
 
 /**
- * Use `Route(schema, implementations)` to create a `Route`.
+ * Use `Route(schema, implementations)` to create a `Route` instance.
  */
-export interface Route<M extends MethodSchemas> {
+export interface RouteImpl<M extends MethodSchemas> {
   /**
    * @internal
    */
@@ -28,13 +28,13 @@ export interface Route<M extends MethodSchemas> {
 }
 
 /**
- * Defines a route that implements all methods that is defined in the route
- * schema.
+ * Creates a `RouteImpl` instance that contains implementations of all methods
+ * of a route schema.
  *
  * #### Example
  *
  * ```ts
- * const TestRoute = Route(TestRouteSchema, {
+ * const TestRoute = RouteImpl(TestRouteSchema, {
  *   async get(data) {
  *     // Do stuff
  *
@@ -59,10 +59,10 @@ export interface Route<M extends MethodSchemas> {
  * @param implementations - The implementations of the methods defined in the
  * given route schema.
  */
-export function Route<M extends MethodSchemas>(
+export function RouteImpl<M extends MethodSchemas>(
   schema: RouteSchema<M>,
   implementations: MethodImpls<M>
-): Route<M> {
+): RouteImpl<M> {
   return {
     path: schema.path,
 

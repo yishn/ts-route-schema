@@ -1,22 +1,32 @@
 import * as fetchPonyfill from 'fetch-ponyfill'
 import * as qs from 'qs'
 import type { RouteSchema } from './RouteSchema'
-import type {
-  MethodSchemas,
-  MethodFetch,
-  MethodFetchs,
-  FetchRouteOptions,
-} from './types'
+import type { MethodSchema } from './MethodSchema'
+import type { MethodSchemas, MethodFetch, FetchRouteOptions } from './types'
 
 const { fetch, Headers } = fetchPonyfill()
 
 /**
- * Creates and executes an HTTP request based on the given route schema.
+ * Use `RouteFetcher(schema)` to create a `RouteFetcher` instance.
+ */
+export type RouteFetcher<M extends MethodSchemas> = {
+  [K in keyof M & keyof MethodSchemas]: M[K] extends MethodSchema<
+    infer T,
+    infer U
+  >
+    ? MethodFetch<T, U>
+    : never
+}
+
+/**
+ * Creates a `RouteFetcher` instance that can be used to execute an HTTP request
+ * based on the given route schema.
  *
  * #### Example
  *
  * ```ts
- * let response = await fetchRoute(TestRouteSchema).get({
+ * let TestRoute = await RouteFetcher(TestRouteSchema)
+ * let response = TestRoute.get({
  *   query: {
  *     name: 'Simon'
  *   }
@@ -30,10 +40,10 @@ const { fetch, Headers } = fetchPonyfill()
  * @param schema - The route schema of the route to request.
  * @param options - Additional fetching options.
  */
-export function fetchRoute<M extends MethodSchemas>(
+export function RouteFetcher<M extends MethodSchemas>(
   schema: RouteSchema<M>,
   options: FetchRouteOptions = {}
-): MethodFetchs<M> {
+): RouteFetcher<M> {
   let result = {} as Record<string, MethodFetch>
 
   async function request(

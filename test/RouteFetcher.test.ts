@@ -2,10 +2,10 @@ import * as t from 'tap'
 import * as express from 'express'
 import * as getPort from 'get-port'
 import { ParamsQueryRoute, TestRoute } from './routes'
-import { fetchRoute } from '../src/main'
+import { RouteFetcher } from '../src/main'
 import { ParamsQueryRouteSchema, TestRouteSchema } from './routeSchemas'
 
-t.test('fetchRoute', async t => {
+t.test('RouteFetcher', async t => {
   t.beforeEach(async (_, t) => {
     const port = await getPort()
     const app = express()
@@ -27,7 +27,7 @@ t.test('fetchRoute', async t => {
   })
 
   t.test('Fire a GET request', async t => {
-    let response = await fetchRoute(TestRouteSchema, {
+    let response = await RouteFetcher(TestRouteSchema, {
       pathPrefix: t.context.pathPrefix,
     }).get()
 
@@ -38,7 +38,7 @@ t.test('fetchRoute', async t => {
   })
 
   t.test('Fire a POST request', async t => {
-    let response = await fetchRoute(TestRouteSchema, {
+    let response = await RouteFetcher(TestRouteSchema, {
       pathPrefix: t.context.pathPrefix,
     }).post({
       params: {
@@ -56,7 +56,7 @@ t.test('fetchRoute', async t => {
   })
 
   t.test('Fire a PATCH request with uncaught server error', async t => {
-    let response = await fetchRoute(TestRouteSchema, {
+    let response = await RouteFetcher(TestRouteSchema, {
       pathPrefix: t.context.pathPrefix,
     }).patch()
 
@@ -65,7 +65,7 @@ t.test('fetchRoute', async t => {
   })
 
   t.test('Fire a GET request with params and query', async t => {
-    let response = await fetchRoute(ParamsQueryRouteSchema, {
+    let response = await RouteFetcher(ParamsQueryRouteSchema, {
       pathPrefix: t.context.pathPrefix,
     }).get({
       params: { name: '沈易川' },
@@ -80,7 +80,7 @@ t.test('fetchRoute', async t => {
   })
 
   t.test('Fire a DELETE request with params and query', async t => {
-    let response = await fetchRoute(ParamsQueryRouteSchema, {
+    let response = await RouteFetcher(ParamsQueryRouteSchema, {
       pathPrefix: t.context.pathPrefix,
     }).delete({
       params: { name: '沈易川' },

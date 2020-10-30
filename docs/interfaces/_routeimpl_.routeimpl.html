@@ -3,7 +3,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<title>Route | ts-express-route-schema</title>
+	<title>RouteImpl | ts-express-route-schema</title>
 	<meta name="description" content="Documentation for ts-express-route-schema">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="stylesheet" href="../assets/css/main.css">
@@ -56,13 +56,13 @@
 					<a href="../globals.html">Globals</a>
 				</li>
 				<li>
-					<a href="../modules/_route_.html">&quot;Route&quot;</a>
+					<a href="../modules/_routeimpl_.html">&quot;RouteImpl&quot;</a>
 				</li>
 				<li>
-					<a href="_route_.route.html">Route</a>
+					<a href="_routeimpl_.routeimpl.html">RouteImpl</a>
 				</li>
 			</ul>
-			<h1>Interface Route&lt;M&gt;</h1>
+			<h1>Interface RouteImpl&lt;M&gt;</h1>
 		</div>
 	</div>
 </header>
@@ -72,7 +72,7 @@
 			<section class="tsd-panel tsd-comment">
 				<div class="tsd-comment tsd-typography">
 					<div class="lead">
-						<p>Use <code>Route(schema, implementations)</code> to create a <code>Route</code>.</p>
+						<p>Use <code>Route(schema, implementations)</code> to create a <code>Route</code> instance.</p>
 					</div>
 				</div>
 			</section>
@@ -88,7 +88,7 @@
 				<h3>Hierarchy</h3>
 				<ul class="tsd-hierarchy">
 					<li>
-						<span class="target">Route</span>
+						<span class="target">RouteImpl</span>
 					</li>
 				</ul>
 			</section>
@@ -99,13 +99,13 @@
 						<section class="tsd-index-section tsd-is-external">
 							<h3>Properties</h3>
 							<ul class="tsd-index-list">
-								<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-external"><a href="_route_.route.html#path" class="tsd-kind-icon">path</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-external"><a href="_routeimpl_.routeimpl.html#path" class="tsd-kind-icon">path</a></li>
 							</ul>
 						</section>
 						<section class="tsd-index-section tsd-is-external">
 							<h3>Methods</h3>
 							<ul class="tsd-index-list">
-								<li class="tsd-kind-method tsd-parent-kind-interface tsd-is-external"><a href="_route_.route.html#mounttoexpress" class="tsd-kind-icon">mount<wbr>ToExpress</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-interface tsd-is-external"><a href="_routeimpl_.routeimpl.html#mounttoexpress" class="tsd-kind-icon">mount<wbr>ToExpress</a></li>
 							</ul>
 						</section>
 					</div>
@@ -119,7 +119,7 @@
 					<div class="tsd-signature tsd-kind-icon">path<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/yishn/typed-express-router/blob/e37bf5f/src/Route.ts#L21">src/Route.ts:21</a></li>
+							<li>Defined in src/RouteImpl.ts:21</li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -141,7 +141,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/yishn/typed-express-router/blob/e37bf5f/src/Route.ts#L27">src/Route.ts:27</a></li>
+									<li>Defined in src/RouteImpl.ts:27</li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -181,14 +181,14 @@
 					<li class=" tsd-kind-module tsd-is-external">
 						<a href="../modules/_methodschema_.html">&quot;<wbr>Method<wbr>Schema&quot;</a>
 					</li>
+					<li class=" tsd-kind-module tsd-is-external">
+						<a href="../modules/_routefetcher_.html">&quot;<wbr>Route<wbr>Fetcher&quot;</a>
+					</li>
 					<li class="current tsd-kind-module tsd-is-external">
-						<a href="../modules/_route_.html">&quot;<wbr>Route&quot;</a>
+						<a href="../modules/_routeimpl_.html">&quot;<wbr>Route<wbr>Impl&quot;</a>
 					</li>
 					<li class=" tsd-kind-module tsd-is-external">
 						<a href="../modules/_routeschema_.html">&quot;<wbr>Route<wbr>Schema&quot;</a>
-					</li>
-					<li class=" tsd-kind-module tsd-is-external">
-						<a href="../modules/_fetchroute_.html">&quot;fetch<wbr>Route&quot;</a>
 					</li>
 					<li class=" tsd-kind-module tsd-is-external">
 						<a href="../modules/_types_.html">&quot;types&quot;</a>
@@ -200,20 +200,20 @@
 				</ul>
 				<ul class="current">
 					<li class="current tsd-kind-interface tsd-parent-kind-module tsd-has-type-parameter tsd-is-external">
-						<a href="_route_.route.html" class="tsd-kind-icon">Route</a>
+						<a href="_routeimpl_.routeimpl.html" class="tsd-kind-icon">Route<wbr>Impl</a>
 						<ul>
 							<li class=" tsd-kind-property tsd-parent-kind-interface tsd-is-external">
-								<a href="_route_.route.html#path" class="tsd-kind-icon">path</a>
+								<a href="_routeimpl_.routeimpl.html#path" class="tsd-kind-icon">path</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-interface tsd-is-external">
-								<a href="_route_.route.html#mounttoexpress" class="tsd-kind-icon">mount<wbr>ToExpress</a>
+								<a href="_routeimpl_.routeimpl.html#mounttoexpress" class="tsd-kind-icon">mount<wbr>ToExpress</a>
 							</li>
 						</ul>
 					</li>
 				</ul>
 				<ul class="after-current">
 					<li class=" tsd-kind-function tsd-parent-kind-module tsd-has-type-parameter tsd-is-external">
-						<a href="../modules/_route_.html#route-1" class="tsd-kind-icon">Route</a>
+						<a href="../modules/_routeimpl_.html#routeimpl-1" class="tsd-kind-icon">Route<wbr>Impl</a>
 					</li>
 				</ul>
 			</nav>
