@@ -1,3 +1,3 @@
-# ts-express-route-schema
+# ts-route-schema
 
-WIP: Strictly typed Express routes.
+WIP: Strictly typed, isomorphic routes.
