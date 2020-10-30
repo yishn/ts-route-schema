@@ -32,7 +32,7 @@ export const ParamsQueryRoute = ExpressRouteImpl(ParamsQueryRouteSchema, {
     return {
       body: {
         name: data.params.name,
-        q: data.query.q,
+        q: data.query.q ?? 'Default',
       },
     }
   },

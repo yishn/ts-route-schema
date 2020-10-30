@@ -4,7 +4,6 @@
     "target": "ES2018",
     "module": "CommonJS",
     "strict": true,
-    "strictNullChecks": true,
     "sourceMap": true,
     "declaration": true,
     "declarationMap": true

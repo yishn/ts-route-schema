@@ -36,11 +36,26 @@ export const TestRouteSchema = RouteSchema('/test', {
   patch: MethodSchema<RequestData<{}>, ResponseData<{}>>(),
 })
 
+/**
+ * Typedoc description
+ */
 export const ParamsQueryRouteSchema = RouteSchema('/params/:name/query', {
   get: MethodSchema<
     RequestData<{
-      params: { name: string }
-      query: { q: string }
+      params: {
+        /**
+         * The name
+         */
+        name: string
+      }
+      query: {
+        /**
+         * The query
+         *
+         * @default 'Default'
+         */
+        q?: string
+      }
     }>,
     ResponseData<{
       body: {
