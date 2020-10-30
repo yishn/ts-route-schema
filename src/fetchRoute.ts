@@ -52,7 +52,10 @@ export function fetchRoute<S extends RouteSchema>(
       headers,
     })
 
-    let responseContentType = rawResponse.headers.get('content-type')
+    let responseContentType = rawResponse.headers
+      .get('content-type')
+      ?.split(';')?.[0]
+
     let body =
       responseContentType === 'application/json'
         ? await rawResponse.json()

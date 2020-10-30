@@ -31,7 +31,9 @@ t.test('fetchRoute', async t => {
     }).get()
 
     t.strictEqual(response.status, 200)
-    t.strictEqual(response.body?.message, 'Hello World!')
+    if (response.status === 200) {
+      t.strictEqual(response.body.message, 'Hello World!')
+    }
   })
 
   t.test('Fire a POST request', async t => {
@@ -47,7 +49,9 @@ t.test('fetchRoute', async t => {
     })
 
     t.strictEqual(response.status, 201)
-    t.strictEqual(response.body?.message, 'Hi everyone!')
+    if (response.status === 201) {
+      t.strictEqual(response.body.message, 'Hi everyone!')
+    }
   })
 
   t.test('Fire a PATCH request with uncaught server error', async t => {
@@ -68,8 +72,10 @@ t.test('fetchRoute', async t => {
     })
 
     t.strictEqual(response.status, 200)
-    t.strictEqual(response.body?.name, '沈易川')
-    t.strictEqual(response.body?.q, 'stuck in traffic')
+    if (response.status === 200) {
+      t.strictEqual(response.body.name, '沈易川')
+      t.strictEqual(response.body.q, 'stuck in traffic')
+    }
   })
 
   t.test('Fire a DELETE request with params and query', async t => {
@@ -80,6 +86,8 @@ t.test('fetchRoute', async t => {
     })
 
     t.strictEqual(response.status, 200)
-    t.strictEqual(response.body?.name, '沈易川')
+    if (response.status === 200) {
+      t.strictEqual(response.body.name, '沈易川')
+    }
   })
 })
