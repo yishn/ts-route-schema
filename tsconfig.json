@@ -4,9 +4,10 @@
     "target": "ES2016",
     "module": "CommonJS",
     "strict": true,
+    "strictNullChecks": true,
     "sourceMap": true,
     "declaration": true,
     "declarationMap": true
   },
-  "include": ["./src/**/*"]
+  "include": ["./src/**/*", "./test/**/*"]
 }
