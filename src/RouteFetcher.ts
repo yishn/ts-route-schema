@@ -1,5 +1,6 @@
 import * as fetchPonyfill from 'fetch-ponyfill'
 import * as qs from 'qs'
+import { compile as compilePath } from 'path-to-regexp'
 import type { RouteSchema } from './RouteSchema'
 import type { MethodSchema } from './MethodSchema'
 import type { MethodSchemas, MethodFetch, FetchRouteOptions } from './types'
@@ -50,18 +51,11 @@ export function RouteFetcher<M extends MethodSchemas>(
     method: string,
     data: Parameters<MethodFetch>[0] = {}
   ) {
-    let renderedPath = (options.pathPrefix ?? '') + schema.path
-
-    for (let name in data.params ?? {}) {
-      let value = (data.params?.[name] as string) ?? ''
-
-      if (!/^\w+$/.test(name)) {
-        throw new Error('Param values may only contain alphanumeric characters')
-      }
-
-      let regex = new RegExp(`:${name}\\??`, 'g')
-      renderedPath = renderedPath.replace(regex, encodeURIComponent(value))
-    }
+    let renderedPath =
+      (options.pathPrefix ?? '') +
+      compilePath(schema.path, {
+        encode: encodeURIComponent,
+      })(data.params ?? {})
 
     if (data.query != null) {
       renderedPath += '?' + qs.stringify(data.query)
