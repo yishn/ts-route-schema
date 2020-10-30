@@ -55,18 +55,15 @@ export type ResponseData<
   KnownOrDefault<T, 'status', 200> &
   KnownOrDefault<T, 'body', undefined>
 
-export type Method =
-  | 'get'
-  | 'post'
-  | 'put'
-  | 'delete'
-  | 'patch'
-  | 'options'
-  | 'head'
-
-export type MethodSchemas = Partial<
-  Record<Method, MethodSchema<RequestData, ResponseData>>
->
+export interface MethodSchemas {
+  get?: MethodSchema<RequestData, ResponseData>
+  post?: MethodSchema<RequestData, ResponseData>
+  put?: MethodSchema<RequestData, ResponseData>
+  delete?: MethodSchema<RequestData, ResponseData>
+  patch?: MethodSchema<RequestData, ResponseData>
+  options?: MethodSchema<RequestData, ResponseData>
+  head?: MethodSchema<RequestData, ResponseData>
+}
 
 export interface MethodImpl<
   T extends RequestData = RequestData,

@@ -1,6 +1,6 @@
 import type { RequestHandler } from 'express'
 import type { RouteSchema } from './RouteSchema'
-import type { MethodImpls, MethodImpl, Method } from './types'
+import type { MethodImpls, MethodImpl, MethodSchemas } from './types'
 
 /**
  * @internal
@@ -53,7 +53,7 @@ export function Route<S extends RouteSchema>(
     schema.path,
     async (req, res, next) => {
       let implementation = implementations[
-        req.method.toLowerCase() as Method
+        req.method.toLowerCase() as keyof MethodSchemas
       ] as MethodImpl | undefined
 
       if (implementation == null) return next()
@@ -62,7 +62,7 @@ export function Route<S extends RouteSchema>(
         let responseData = await implementation({
           req,
           res,
-          contentType: req.header("content-type"),
+          contentType: req.header('content-type'),
           params: req.params,
           query: req.query,
           body: req.body,
