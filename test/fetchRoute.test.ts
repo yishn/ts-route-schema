@@ -11,8 +11,9 @@ t.test('fetchRoute', async t => {
     const app = express()
 
     app.use(express.json())
-    app.all(...TestRoute)
-    app.all(...ParamsQueryRoute)
+
+    TestRoute.mountToExpress(app)
+    ParamsQueryRoute.mountToExpress(app)
 
     t.context.pathPrefix = `http://localhost:${port}`
 

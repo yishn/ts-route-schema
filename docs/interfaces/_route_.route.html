@@ -3,7 +3,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<title>RouteSchema | ts-express-route-schema</title>
+	<title>Route | ts-express-route-schema</title>
 	<meta name="description" content="Documentation for ts-express-route-schema">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="stylesheet" href="../assets/css/main.css">
@@ -56,13 +56,13 @@
 					<a href="../globals.html">Globals</a>
 				</li>
 				<li>
-					<a href="../modules/_routeschema_.html">&quot;RouteSchema&quot;</a>
+					<a href="../modules/_route_.html">&quot;Route&quot;</a>
 				</li>
 				<li>
-					<a href="_routeschema_.routeschema.html">RouteSchema</a>
+					<a href="_route_.route.html">Route</a>
 				</li>
 			</ul>
-			<h1>Interface RouteSchema&lt;M&gt;</h1>
+			<h1>Interface Route&lt;M&gt;</h1>
 		</div>
 	</div>
 </header>
@@ -72,7 +72,7 @@
 			<section class="tsd-panel tsd-comment">
 				<div class="tsd-comment tsd-typography">
 					<div class="lead">
-						<p>Use <code>RouteSchema(path, methods)</code> to declare this interface.</p>
+						<p>Use <code>Route(schema, implementations)</code> to create a <code>Route</code>.</p>
 					</div>
 				</div>
 			</section>
@@ -80,7 +80,7 @@
 				<h3>Type parameters</h3>
 				<ul class="tsd-type-parameters">
 					<li>
-						<h4>M<span class="tsd-signature-symbol">: </span><a href="_types_.methodschemas.html" class="tsd-signature-type">MethodSchemas</a> = <span class="tsd-signature-type">any</span></h4>
+						<h4>M<span class="tsd-signature-symbol">: </span><a href="_types_.methodschemas.html" class="tsd-signature-type">MethodSchemas</a></h4>
 					</li>
 				</ul>
 			</section>
@@ -88,7 +88,7 @@
 				<h3>Hierarchy</h3>
 				<ul class="tsd-hierarchy">
 					<li>
-						<span class="target">RouteSchema</span>
+						<span class="target">Route</span>
 					</li>
 				</ul>
 			</section>
@@ -99,8 +99,13 @@
 						<section class="tsd-index-section tsd-is-external">
 							<h3>Properties</h3>
 							<ul class="tsd-index-list">
-								<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-external"><a href="_routeschema_.routeschema.html#methods" class="tsd-kind-icon">methods</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-external"><a href="_routeschema_.routeschema.html#path" class="tsd-kind-icon">path</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-external"><a href="_route_.route.html#path" class="tsd-kind-icon">path</a></li>
+							</ul>
+						</section>
+						<section class="tsd-index-section tsd-is-external">
+							<h3>Methods</h3>
+							<ul class="tsd-index-list">
+								<li class="tsd-kind-method tsd-parent-kind-interface tsd-is-external"><a href="_route_.route.html#mounttoexpress" class="tsd-kind-icon">mount<wbr>ToExpress</a></li>
 							</ul>
 						</section>
 					</div>
@@ -109,35 +114,52 @@
 			<section class="tsd-panel-group tsd-member-group tsd-is-external">
 				<h2>Properties</h2>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface tsd-is-external">
-					<a name="methods" class="tsd-anchor"></a>
-					<h3>methods</h3>
-					<div class="tsd-signature tsd-kind-icon">methods<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">M</span></div>
-					<aside class="tsd-sources">
-						<ul>
-							<li>Defined in <a href="https://github.com/yishn/typed-express-router/blob/e37bf5f/src/RouteSchema.ts#L15">src/RouteSchema.ts:15</a></li>
-						</ul>
-					</aside>
-					<div class="tsd-comment tsd-typography">
-						<div class="lead">
-							<p>Defines supported HTTP methods on the given path and type information on
-							request and response data.</p>
-						</div>
-					</div>
-				</section>
-				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface tsd-is-external">
 					<a name="path" class="tsd-anchor"></a>
 					<h3>path</h3>
 					<div class="tsd-signature tsd-kind-icon">path<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/yishn/typed-express-router/blob/e37bf5f/src/RouteSchema.ts#L10">src/RouteSchema.ts:10</a></li>
+							<li>Defined in <a href="https://github.com/yishn/typed-express-router/blob/e37bf5f/src/Route.ts#L21">src/Route.ts:21</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
 						<div class="lead">
-							<p>The path of the route.</p>
+							<p>The route path.</p>
 						</div>
 					</div>
+				</section>
+			</section>
+			<section class="tsd-panel-group tsd-member-group tsd-is-external">
+				<h2>Methods</h2>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-interface tsd-is-external">
+					<a name="mounttoexpress" class="tsd-anchor"></a>
+					<h3>mount<wbr>ToExpress</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-interface tsd-is-external">
+						<li class="tsd-signature tsd-kind-icon">mount<wbr>ToExpress<span class="tsd-signature-symbol">(</span>router<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Router</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/yishn/typed-express-router/blob/e37bf5f/src/Route.ts#L27">src/Route.ts:27</a></li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Mounts the route to the given Express router.</p>
+								</div>
+							</div>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>router: <span class="tsd-signature-type">Router</span></h5>
+									<div class="tsd-comment tsd-typography">
+									</div>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
+						</li>
+					</ul>
 				</section>
 			</section>
 		</div>
@@ -159,10 +181,10 @@
 					<li class=" tsd-kind-module tsd-is-external">
 						<a href="../modules/_methodschema_.html">&quot;<wbr>Method<wbr>Schema&quot;</a>
 					</li>
-					<li class=" tsd-kind-module tsd-is-external">
+					<li class="current tsd-kind-module tsd-is-external">
 						<a href="../modules/_route_.html">&quot;<wbr>Route&quot;</a>
 					</li>
-					<li class="current tsd-kind-module tsd-is-external">
+					<li class=" tsd-kind-module tsd-is-external">
 						<a href="../modules/_routeschema_.html">&quot;<wbr>Route<wbr>Schema&quot;</a>
 					</li>
 					<li class=" tsd-kind-module tsd-is-external">
@@ -178,20 +200,20 @@
 				</ul>
 				<ul class="current">
 					<li class="current tsd-kind-interface tsd-parent-kind-module tsd-has-type-parameter tsd-is-external">
-						<a href="_routeschema_.routeschema.html" class="tsd-kind-icon">Route<wbr>Schema</a>
+						<a href="_route_.route.html" class="tsd-kind-icon">Route</a>
 						<ul>
 							<li class=" tsd-kind-property tsd-parent-kind-interface tsd-is-external">
-								<a href="_routeschema_.routeschema.html#methods" class="tsd-kind-icon">methods</a>
+								<a href="_route_.route.html#path" class="tsd-kind-icon">path</a>
 							</li>
-							<li class=" tsd-kind-property tsd-parent-kind-interface tsd-is-external">
-								<a href="_routeschema_.routeschema.html#path" class="tsd-kind-icon">path</a>
+							<li class=" tsd-kind-method tsd-parent-kind-interface tsd-is-external">
+								<a href="_route_.route.html#mounttoexpress" class="tsd-kind-icon">mount<wbr>ToExpress</a>
 							</li>
 						</ul>
 					</li>
 				</ul>
 				<ul class="after-current">
 					<li class=" tsd-kind-function tsd-parent-kind-module tsd-has-type-parameter tsd-is-external">
-						<a href="../modules/_routeschema_.html#routeschema-1" class="tsd-kind-icon">Route<wbr>Schema</a>
+						<a href="../modules/_route_.html#route-1" class="tsd-kind-icon">Route</a>
 					</li>
 				</ul>
 			</nav>

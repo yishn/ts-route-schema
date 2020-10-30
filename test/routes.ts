@@ -14,6 +14,7 @@ export const TestRoute = Route(TestRouteSchema, {
 
   async post(data) {
     return {
+      contentType: 'application/json',
       status: 201,
       body: {
         message: data.body.message,

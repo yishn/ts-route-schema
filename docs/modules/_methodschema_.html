@@ -97,14 +97,25 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/yishn/typed-express-router/blob/c608769/src/MethodSchema.ts#L22">src/MethodSchema.ts:22</a></li>
+									<li>Defined in <a href="https://github.com/yishn/typed-express-router/blob/e37bf5f/src/MethodSchema.ts#L38">src/MethodSchema.ts:38</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
 								<div class="lead">
 									<p>Represents the type information on the request and response data of an HTTP
-									method described in a route schema</p>
+									method described in a route schema.</p>
 								</div>
+								<a href="#example" id="example" style="color: inherit; text-decoration: none;">
+									<h4>Example</h4>
+								</a>
+								<pre><code class="language-ts">MethodSchema&lt;
+  RequestData&lt;{
+    <span class="hljs-attr">query</span>: { <span class="hljs-attr">name</span>: <span class="hljs-built_in">string</span> }
+  }&gt;,
+  ResponseData&lt;{
+    <span class="hljs-attr">body</span>: { <span class="hljs-attr">message</span>: <span class="hljs-built_in">string</span> }
+  }&gt;
+&gt;()</code></pre>
 							</div>
 							<h4 class="tsd-type-parameters-title">Type parameters</h4>
 							<ul class="tsd-type-parameters">

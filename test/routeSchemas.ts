@@ -25,6 +25,7 @@ export const TestRouteSchema = RouteSchema('/test', {
       }
     }>,
     ResponseData<{
+      contentType: 'application/json'
       status: number
       body: {
         message: string
