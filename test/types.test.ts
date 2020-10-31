@@ -62,7 +62,7 @@ t.test('types', async t => {
         }>,
         {
           contentType?: 'application/json'
-          status: 200
+          status?: 200
           body: {
             blah: string
           }

@@ -24,8 +24,8 @@ type IsUnknown<T> = IsAny<T> extends true
 
 type KnownOrDefault<T, K extends keyof T, D> = IsUnknown<T[K]> extends true
   ? { [_ in K]?: D }
-  : IsAny<T[K]> extends true
-  ? { [_ in K]?: any }
+  : D extends T[K]
+  ? { [_ in K]?: T[K] }
   : { [_ in K]: T[K] }
 
 interface RequestDataTemplate {
