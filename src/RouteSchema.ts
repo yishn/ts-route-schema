@@ -17,7 +17,7 @@ export interface RouteSchema<M extends MethodSchemas = any> {
 
 /**
  * Defines a route schema, i.e. a path on the server with type information on
- * request data and response data for every supported HTTP methods.
+ * request data and response data for every supported HTTP method.
  *
  * #### Example
  *

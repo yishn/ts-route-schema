@@ -138,7 +138,7 @@ export async function fetchGreeting(
 
   // Equivalent to:
   //
-  // let response = await fetch(
+  // await fetch(
   //   `/hello/${encodeURIComponent(name)}?greeting=${encodeURIComponent(
   //     greeting
   //   )}`
