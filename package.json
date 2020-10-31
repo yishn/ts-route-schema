@@ -1,6 +1,6 @@
 {
   "name": "ts-route-schema",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Strictly typed, isomorphic routes.",
   "main": "./dist/main.js",
   "scripts": {
