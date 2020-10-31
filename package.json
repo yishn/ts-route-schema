@@ -3,10 +3,11 @@
   "version": "1.0.1",
   "description": "Strictly typed, isomorphic routes.",
   "main": "./dist/main.js",
+  "module": "./esm/main.js",
   "scripts": {
     "test": "tap --test-regex=test\\/.*\\.test\\.ts$ --reporter=base",
     "format": "prettier --write .",
-    "build": "prettier --check . && tsc --project ./tsconfig.build.json",
+    "build": "prettier --check . && tsc --project ./tsconfig.commonjs.json && tsc --project ./tsconfig.esm.json",
     "docs": "typedoc --out ./docs --excludePrivate --stripInternal ./src/main.ts && node --eval \"require('fs').writeFileSync('./docs/.nojekyll', '')\""
   },
   "repository": {

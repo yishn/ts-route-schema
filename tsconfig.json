@@ -1,12 +1,11 @@
 {
   "compilerOptions": {
     "rootDir": ".",
-    "target": "ES2018",
-    "module": "CommonJS",
     "strict": true,
     "sourceMap": true,
     "declaration": true,
-    "declarationMap": true
+    "declarationMap": true,
+    "moduleResolution": "Node"
   },
   "include": ["./src/**/*", "./test/**/*"]
 }
