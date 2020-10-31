@@ -155,3 +155,29 @@ export async function fetchGreeting(
 We're using [fetch-ponyfill](https://www.npmjs.com/package/fetch-ponyfill) which
 is an isomorphic library, i.e. `RouteFetcher` also works on the backend. On the
 backend, you might want to set the `pathPrefix` option.
+
+## Building & Testing
+
+To run the tests, execute as usual:
+
+```
+$ npm test
+```
+
+To build the project, use the `build` npm script:
+
+```
+$ npm run build
+```
+
+Make sure you have formatted all files using Prettier beforehand:
+
+```
+$ npm run format
+```
+
+To build the documentation, execute:
+
+```
+$ npm run docs
+```
