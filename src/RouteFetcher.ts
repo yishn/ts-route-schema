@@ -76,7 +76,7 @@ export function RouteFetcher<M extends MethodSchemas>(
           ? qs.stringify(data.body)
           : requestContentType === 'text/plain'
           ? data.body.toString()
-          : null,
+          : data.body,
       ...data.req,
       headers,
     })

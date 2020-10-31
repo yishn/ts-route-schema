@@ -165,6 +165,11 @@ export type MethodImpls<M extends MethodSchemas, Tr, Ur> = {
     : never
 }
 
+type SupportedContentType =
+  | 'application/json'
+  | 'application/x-www-form-urlencoded'
+  | 'text/plain'
+
 type MethodFetchArgs<T extends RequestData> = [
   data: T & {
     /**
@@ -179,11 +184,30 @@ export interface MethodFetch<
   U extends ResponseData = ResponseData
 > {
   (
-    ...args: {} extends T ? Partial<MethodFetchArgs<T>> : MethodFetchArgs<T>
+    ...args: {} extends MethodFetchArgs<T>[0]
+      ? Partial<MethodFetchArgs<T>>
+      : MethodFetchArgs<T>
   ): Promise<
     Required<
-      | U
-      | ResponseData<{
+      | (U['contentType'] extends SupportedContentType | undefined
+          ? U
+          : Omit<U, 'body'> & {
+              /**
+               * Unsupported content types do not have a populated `body` field.
+               * Please use one of [`fetch`'s body consumption
+               * functions](https://developer.mozilla.org/en-US/docs/Web/API/Body).
+               *
+               * #### Example
+               *
+               * ```ts
+               * if (response.contentType === 'application/octet-stream') {
+               *   let buf = await response.res.arrayBuffer()
+               * }
+               * ```
+               */
+              body: U['body'] | undefined
+            })
+      | (ResponseData<{
           /**
            * Empty body with status 500 will be sent in case of uncaught errors.
            */
@@ -192,13 +216,13 @@ export interface MethodFetch<
            * Empty body with status 500 will be sent in case of uncaught errors.
            */
           body: undefined
-        }>
-    > & {
-      /**
-       * The response object as returned by `fetch`.
-       */
-      res: Response
-    }
+        }> & {
+          /**
+           * The response object as returned by `fetch`.
+           */
+          res: Response
+        })
+    >
   >
 }
 
