@@ -38,6 +38,17 @@ export type RouteFetcher<M extends MethodSchemas> = {
  * }
  * ```
  *
+ * Unsupported content types do not have a populated `body` field. Please use
+ * one of [`fetch`'s body consumption functions](https://developer.mozilla.org/en-US/docs/Web/API/Body).
+ *
+ * #### Example
+ *
+ * ```ts
+ * if (response.contentType === 'application/octet-stream') {
+ *   let buf = await response.res.arrayBuffer()
+ * }
+ * ```
+ *
  * @param schema - The route schema of the route to request.
  * @param options - Additional fetching options.
  */
