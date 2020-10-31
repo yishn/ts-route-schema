@@ -2,8 +2,8 @@
   "name": "ts-route-schema",
   "version": "1.0.1",
   "description": "Strictly typed, isomorphic routes.",
-  "main": "./dist/main.js",
-  "module": "./esm/main.js",
+  "main": "./dist/commonjs/main.js",
+  "module": "./dist/esm/main.js",
   "scripts": {
     "test": "tap --test-regex=test\\/.*\\.test\\.ts$ --reporter=base",
     "format": "prettier --write .",
