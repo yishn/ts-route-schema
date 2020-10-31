@@ -1,65 +1,78 @@
-import { as, RequestData, ResponseData, RouteSchema } from '../src/main'
+import {
+  MethodSchema,
+  RequestData,
+  ResponseData,
+  RouteSchema,
+} from '../src/main'
 
 export const TestRouteSchema = RouteSchema('/test', {
-  get: as<
-    [
-      RequestData<{}>,
-      ResponseData<{
-        body: {
-          message: string
-        }
-      }>
-    ]
+  get: MethodSchema<
+    RequestData<{}>,
+    ResponseData<{
+      body: {
+        message: string
+      }
+    }>
   >(),
 
-  post: as<
-    [
-      RequestData<{
-        params: {
-          blah: string
-        }
-        body: {
-          message: string
-        }
-      }>,
-      ResponseData<{
-        status: number
-        body: {
-          message: string
-        }
-      }>
-    ]
+  post: MethodSchema<
+    RequestData<{
+      params: {
+        blah: string
+      }
+      body: {
+        message: string
+      }
+    }>,
+    ResponseData<{
+      contentType: 'application/json'
+      status: number
+      body: {
+        message: string
+      }
+    }>
   >(),
 
-  patch: as<[RequestData<{}>, ResponseData<{}>]>(),
+  patch: MethodSchema<RequestData<{}>, ResponseData<{}>>(),
 })
 
+/**
+ * Typedoc description
+ */
 export const ParamsQueryRouteSchema = RouteSchema('/params/:name/query', {
-  get: as<
-    [
-      RequestData<{
-        params: { name: string }
-        query: { q: string }
-      }>,
-      ResponseData<{
-        body: {
-          name: string
-          q: string
-        }
-      }>
-    ]
+  get: MethodSchema<
+    RequestData<{
+      params: {
+        /**
+         * The name
+         */
+        name: string
+      }
+      query: {
+        /**
+         * The query
+         *
+         * @default 'Default'
+         */
+        q?: string
+      }
+    }>,
+    ResponseData<{
+      body: {
+        name: string
+        q: string
+      }
+    }>
   >(),
 
-  delete: as<
-    [
-      RequestData<{
-        params: { name: string }
-      }>,
-      ResponseData<{
-        body: {
-          name: string
-        }
-      }>
-    ]
+  delete: MethodSchema<
+    RequestData<{
+      params: { name: string }
+    }>,
+    ResponseData<{
+      body: {
+        name: string
+      }
+    }>
   >(),
 })

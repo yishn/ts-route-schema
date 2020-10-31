@@ -8,7 +8,7 @@ t.test('types', async t => {
       TypeEqual<
         RequestData<{}>,
         {
-          headers?: {}
+          contentType?: 'application/json'
           params?: {}
           query?: {}
           body?: undefined
@@ -27,7 +27,7 @@ t.test('types', async t => {
           }
         }>,
         {
-          headers?: {}
+          contentType?: 'application/json'
           params: {
             param: string
           }
@@ -45,8 +45,8 @@ t.test('types', async t => {
       TypeEqual<
         ResponseData<{}>,
         {
+          contentType?: 'application/json'
           status?: 200
-          headers?: {}
           body?: undefined
         }
       >
@@ -61,8 +61,8 @@ t.test('types', async t => {
           }
         }>,
         {
+          contentType?: 'application/json'
           status: 200
-          headers?: {}
           body: {
             blah: string
           }

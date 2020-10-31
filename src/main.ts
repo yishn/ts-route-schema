@@ -1,5 +1,5 @@
 export * from './types'
-export { Route } from './Route'
 export { RouteSchema } from './RouteSchema'
-export { fetchRoute } from './fetchRoute'
-export { as } from './utils'
+export { MethodSchema } from './MethodSchema'
+export { RouteImpl, ExpressRouteImpl } from './RouteImpl'
+export { RouteFetcher } from './RouteFetcher'

@@ -1,13 +1,21 @@
-import type { Request, Response } from 'express'
 import type { ParsedQs } from 'qs'
-import type { RouteSchema } from './RouteSchema'
+import type { MethodSchema } from './MethodSchema'
 
-declare const sym: unique symbol
+/**
+ * @internal
+ */
+declare const phantom: unique symbol
 
-type IsAny<T> = (T extends typeof sym ? true : false) extends false
+/**
+ * Resolves to `true` if and only if `T` is `any`, `false` otherwise.
+ */
+type IsAny<T> = (T extends typeof phantom ? true : false) extends false
   ? false
   : true
 
+/**
+ * Resolves to `true` if and only if `T` is `unknown`, `false` otherwise.
+ */
 type IsUnknown<T> = IsAny<T> extends true
   ? false
   : unknown extends T
@@ -20,100 +28,185 @@ type KnownOrDefault<T, K extends keyof T, D> = IsUnknown<T[K]> extends true
   ? { [_ in K]?: any }
   : { [_ in K]: T[K] }
 
-interface RequestDataBuilder {
-  headers?: Record<string, string | string[] | undefined>
+interface RequestDataTemplate {
+  /**
+   * The content type of the request body.
+   *
+   * @default 'application/json'
+   */
+  contentType?: string
+  /**
+   * The path parameters of the request.
+   *
+   * @default {}
+   */
   params?: Record<string, string | undefined>
+  /**
+   * The query parameters of the request.
+   *
+   * @default {}
+   */
   query?: ParsedQs
+  /**
+   * The body of the request.
+   *
+   * @default undefined
+   */
   body?: any
 }
 
-export type RequestData<
-  T extends RequestDataBuilder = any
-> = {} & KnownOrDefault<T, 'headers', {}> &
-  KnownOrDefault<T, 'params', {}> &
-  KnownOrDefault<T, 'query', {}> &
-  KnownOrDefault<T, 'body', undefined>
+/**
+ * Describes type information of request data based on {@linkcode RequestDataTemplate}.
+ *
+ * #### Example
+ *
+ * ```ts
+ * RequestData<{
+ *   contentType: 'application/json'
+ *   params: { id: string }
+ *   query: { name: string }
+ * }>
+ * ```
+ */
+export type RequestData<T extends RequestDataTemplate = any> = (
+  IsAny<T> extends true
+    ? true
+    : keyof T extends keyof RequestDataTemplate
+    ? true
+    : false
+) extends true
+  ? {} & KnownOrDefault<T, 'contentType', 'application/json'> &
+      KnownOrDefault<T, 'params', {}> &
+      KnownOrDefault<T, 'query', {}> &
+      KnownOrDefault<T, 'body', undefined>
+  : void
 
-interface ResponseDataBuilder {
+interface ResponseDataTemplate {
+  /**
+   * The content type of the response body.
+   *
+   * @default 'application/json'
+   */
+  contentType?: string
+  /**
+   * The HTTP status code of the response.
+   *
+   * @default 200
+   */
   status?: number
-  headers?: Record<string, string | string[] | undefined>
+  /**
+   * The body of the response.
+   *
+   * @default undefined
+   */
   body?: any
 }
 
-export type ResponseData<
-  T extends ResponseDataBuilder = any
-> = {} & KnownOrDefault<T, 'status', 200> &
-  KnownOrDefault<T, 'headers', {}> &
-  KnownOrDefault<T, 'body', undefined>
+/**
+ * Describes type information of response data based on {@linkcode ResponseDataTemplate}.
+ *
+ * #### Example
+ *
+ * ```ts
+ * ResponseData<{
+ *   status: 200 | 404
+ *   body: { content: string }
+ * }>
+ * ```
+ */
+export type ResponseData<T extends ResponseDataTemplate = any> = (
+  IsAny<T> extends true
+    ? true
+    : keyof T extends keyof ResponseDataTemplate
+    ? true
+    : false
+) extends true
+  ? {} & KnownOrDefault<T, 'contentType', 'application/json'> &
+      KnownOrDefault<T, 'status', 200> &
+      KnownOrDefault<T, 'body', undefined>
+  : void
 
-export type Method =
-  | 'get'
-  | 'post'
-  | 'put'
-  | 'delete'
-  | 'patch'
-  | 'options'
-  | 'head'
-
-export type RouteMethods = {
-  [K in Method]?: [RequestData, ResponseData]
+export interface MethodSchemas {
+  get?: MethodSchema<RequestData, ResponseData>
+  post?: MethodSchema<RequestData, ResponseData>
+  put?: MethodSchema<RequestData, ResponseData>
+  delete?: MethodSchema<RequestData, ResponseData>
+  patch?: MethodSchema<RequestData, ResponseData>
+  options?: MethodSchema<RequestData, ResponseData>
+  head?: MethodSchema<RequestData, ResponseData>
 }
 
-export type RouteMethodImpl<
+export interface MethodImpl<
   T extends RequestData = RequestData,
-  U extends ResponseData = ResponseData
-> = (
-  data: Required<T> & {
-    req: Request
-    res: Response
-  }
-) => Promise<U>
-
-export type RouteMethodsImpl<S extends RouteSchema> = S extends RouteSchema<
-  infer M
->
-  ? {
-      [K in keyof M]: M[K] extends [RequestData, ResponseData]
-        ? RouteMethodImpl<M[K][0], M[K][1]>
-        : undefined
+  U extends ResponseData = ResponseData,
+  Tr = any,
+  Ur = any
+> {
+  (
+    data: Required<T> & {
+      /**
+       * Contains the request object as given by the server library.
+       */
+      req: Tr
+      /**
+       * Contains the response object as given by the server library.
+       */
+      res: Ur
     }
-  : never
+  ): Promise<U>
+}
 
-type FetchRouteMethodImplParam<T> = [
-  T & {
-    req?: globalThis.RequestInit
+export type MethodImpls<M extends MethodSchemas, Tr, Ur> = {
+  [K in keyof M & keyof MethodSchemas]: M[K] extends MethodSchema<
+    infer T,
+    infer U
+  >
+    ? MethodImpl<T, U, Tr, Ur>
+    : never
+}
+
+type MethodFetchArgs<T extends RequestData> = [
+  data: T & {
+    /**
+     * You can specify further `fetch` options here.
+     */
+    req?: RequestInit
   }
 ]
 
-export type FetchRouteMethodImpl<
+export interface MethodFetch<
   T extends RequestData = RequestData,
   U extends ResponseData = ResponseData
-> = (
-  ...data: {} extends T
-    ? Partial<FetchRouteMethodImplParam<T>>
-    : FetchRouteMethodImplParam<T>
-) => Promise<
-  Required<
-    | U
-    | ResponseData<{
-        status: 500
-        body: undefined
-      }>
-  > & {
-    res: globalThis.Response
-  }
->
-
-export type FetchRouteMethodsImpl<
-  S extends RouteSchema
-> = S extends RouteSchema<infer M>
-  ? {
-      [K in keyof M]: M[K] extends [RequestData, ResponseData]
-        ? FetchRouteMethodImpl<M[K][0], M[K][1]>
-        : undefined
+> {
+  (
+    ...args: {} extends T ? Partial<MethodFetchArgs<T>> : MethodFetchArgs<T>
+  ): Promise<
+    Required<
+      | U
+      | ResponseData<{
+          /**
+           * Empty body with status 500 will be sent in case of uncaught errors.
+           */
+          status: 500
+          /**
+           * Empty body with status 500 will be sent in case of uncaught errors.
+           */
+          body: undefined
+        }>
+    > & {
+      /**
+       * The response object as returned by `fetch`.
+       */
+      res: Response
     }
-  : never
+  >
+}
 
-export interface FetchRouteOptions {
+export interface RouteFetcherOptions {
+  /**
+   * Will be prefixed to the path when creating the URL for the HTTP request.
+   *
+   * @default ''
+   */
   pathPrefix?: string
 }
