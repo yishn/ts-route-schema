@@ -80,7 +80,7 @@ export function ExpressRouteImpl<M extends MethodSchemas>(
           let responseData = await implementation({
             req,
             res,
-            contentType: req.header('content-type'),
+            contentType: req.header('content-type') ?? 'application/json',
             params: req.params,
             query: req.query,
             body: req.body,

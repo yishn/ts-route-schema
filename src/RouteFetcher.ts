@@ -61,7 +61,7 @@ export function RouteFetcher<M extends MethodSchemas>(
   async function request(
     method: string,
     data: Parameters<MethodFetch>[0] = {}
-  ) {
+  ): Promise<ReturnType<MethodFetch>> {
     let renderedPath =
       (options.pathPrefix ?? '') +
       compilePath(schema.path, {
@@ -86,7 +86,7 @@ export function RouteFetcher<M extends MethodSchemas>(
           : requestContentType === 'application/x-www-form-urlencoded'
           ? qs.stringify(data.body)
           : requestContentType === 'text/plain'
-          ? data.body.toString()
+          ? data.body?.toString()
           : data.body,
       ...data.req,
       headers,
@@ -94,7 +94,7 @@ export function RouteFetcher<M extends MethodSchemas>(
 
     let responseContentType = rawResponse.headers
       .get('content-type')
-      ?.split(';')?.[0]
+      ?.split(';')?.[0]!
 
     let body =
       responseContentType === 'application/json'

@@ -39,5 +39,5 @@ export function MethodSchema<
   T extends RequestData,
   U extends ResponseData
 >(): MethodSchema<T, U> {
-  return 1 as never
+  return {}
 }

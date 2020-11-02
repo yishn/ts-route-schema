@@ -68,7 +68,7 @@ interface RequestDataTemplate {
  * }>
  * ```
  */
-export type RequestData<T extends RequestDataTemplate = any> = (
+export type RequestData<T extends RequestDataTemplate = RequestDataTemplate> = (
   IsAny<T> extends true
     ? true
     : keyof T extends keyof RequestDataTemplate
@@ -114,7 +114,9 @@ interface ResponseDataTemplate {
  * }>
  * ```
  */
-export type ResponseData<T extends ResponseDataTemplate = any> = (
+export type ResponseData<
+  T extends ResponseDataTemplate = ResponseDataTemplate
+> = (
   IsAny<T> extends true
     ? true
     : keyof T extends keyof ResponseDataTemplate
@@ -139,8 +141,8 @@ export interface MethodSchemas {
 export interface MethodImpl<
   T extends RequestData = RequestData,
   U extends ResponseData = ResponseData,
-  Tr = any,
-  Ur = any
+  Tr = unknown,
+  Ur = unknown
 > {
   (
     data: Required<T> & {
@@ -184,44 +186,46 @@ export interface MethodFetch<
   U extends ResponseData = ResponseData
 > {
   (
-    ...args: {} extends MethodFetchArgs<T>[0]
+    ...args: [{}] extends MethodFetchArgs<T>
       ? Partial<MethodFetchArgs<T>>
       : MethodFetchArgs<T>
   ): Promise<
     Required<
-      | (U['contentType'] extends SupportedContentType | undefined
-          ? U
-          : Omit<U, 'body'> & {
-              /**
-               * Unsupported content types do not have a populated `body` field.
-               * Please use one of [`fetch`'s body consumption
-               * functions](https://developer.mozilla.org/en-US/docs/Web/API/Body).
-               *
-               * #### Example
-               *
-               * ```ts
-               * if (response.contentType === 'application/octet-stream') {
-               *   let buf = await response.res.arrayBuffer()
-               * }
-               * ```
-               */
-              body: U['body'] | undefined
-            })
-      | (ResponseData<{
-          /**
-           * Empty body with status 500 will be sent in case of uncaught errors.
-           */
-          status: 500
-          /**
-           * Empty body with status 500 will be sent in case of uncaught errors.
-           */
-          body: undefined
-        }> & {
-          /**
-           * The response object as returned by `fetch`.
-           */
-          res: Response
-        })
+      (
+        | (U['contentType'] extends SupportedContentType | undefined
+            ? U
+            : Omit<U, 'body'> & {
+                /**
+                 * Unsupported content types do not have a populated `body` field.
+                 * Please use one of [`fetch`'s body consumption
+                 * functions](https://developer.mozilla.org/en-US/docs/Web/API/Body).
+                 *
+                 * #### Example
+                 *
+                 * ```ts
+                 * if (response.contentType === 'application/octet-stream') {
+                 *   let buf = await response.res.arrayBuffer()
+                 * }
+                 * ```
+                 */
+                body: U['body'] | undefined
+              })
+        | ResponseData<{
+            /**
+             * Empty body with status 500 will be sent in case of uncaught errors.
+             */
+            status: 500
+            /**
+             * Empty body with status 500 will be sent in case of uncaught errors.
+             */
+            body: undefined
+          }>
+      ) & {
+        /**
+         * The response object as returned by `fetch`.
+         */
+        res: Response
+      }
     >
   >
 }

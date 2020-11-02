@@ -3,7 +3,7 @@ import type { MethodSchemas } from './types'
 /**
  * Use `RouteSchema(path, methods)` to declare this interface.
  */
-export interface RouteSchema<M extends MethodSchemas = any> {
+export interface RouteSchema<M extends MethodSchemas = MethodSchemas> {
   /**
    * The path of the route.
    */
