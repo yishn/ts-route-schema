@@ -4,6 +4,7 @@
   "description": "Strictly typed, isomorphic routes.",
   "main": "./dist/commonjs/main.js",
   "module": "./dist/esm/main.js",
+  "sideEffects": false,
   "scripts": {
     "test": "tap --test-regex=test\\/.*\\.test\\.ts$ --reporter=base",
     "format": "prettier --write .",
